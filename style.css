@@ -235,8 +235,9 @@ h2{font-size:clamp(32px,4.4vw,54px);font-weight:800}
 /* hand-drawn underline under "garlic sauce" */
 .hero .hl{position:relative;white-space:nowrap}
 .scribble{position:absolute;left:-2%;bottom:.02em;width:104%;height:.16em;overflow:visible;pointer-events:none}
-.scribble path{fill:none;stroke:var(--saffron);stroke-width:5;stroke-linecap:round;stroke-dasharray:340;stroke-dashoffset:340;transition:stroke-dashoffset 1s cubic-bezier(.6,0,.2,1) var(--d,1s)}
-.hl.in .scribble path{stroke-dashoffset:0}
+.scribble path{fill:none;stroke:var(--saffron);stroke-width:6;stroke-linecap:round;stroke-dasharray:340;stroke-dashoffset:340;animation:scribble 5s cubic-bezier(.65,0,.35,1) var(--d,1s) infinite backwards}
+/* draw in left→right, hold, wipe out to the right, pause, repeat */
+@keyframes scribble{0%{stroke-dashoffset:340}22%{stroke-dashoffset:0}72%{stroke-dashoffset:0}92%,100%{stroke-dashoffset:-340}}
 /* bestseller rule draws across */
 .strip-head{position:relative;border-top:0!important}
 .strip-head::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--char);transform-origin:left;transform:scaleX(0);transition:transform 1.4s cubic-bezier(.6,0,.2,1) var(--d,0s)}
@@ -284,4 +285,4 @@ h2{font-size:clamp(32px,4.4vw,54px);font-weight:800}
   .toast{bottom:90px}
   .foot-cols{gap:36px}
 }
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.fx,.fx-spin{opacity:1}.split .w>span{transform:none}.scribble path{stroke-dashoffset:0}.strip-head::before{transform:none}}
+@media (prefers-reduced-motion:reduce){*:not(.scribble path),*::before,*::after{animation:none!important;transition:none!important}.fx,.fx-spin{opacity:1}.split .w>span{transform:none}.strip-head::before{transform:none}}
