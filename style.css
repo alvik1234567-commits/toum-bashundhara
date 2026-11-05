@@ -217,8 +217,8 @@ h2{font-size:clamp(32px,4.4vw,54px);font-weight:800}
 
 /* fab + toast */
 .fab{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;background:var(--fire);color:#fff;padding:16px 20px;border-radius:4px;font-weight:600;display:none;justify-content:center;gap:6px}
-.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,120px);background:var(--char);color:var(--cream);padding:14px 22px;border-radius:999px;font-weight:600;font-size:15px;z-index:100;transition:transform .35s cubic-bezier(.2,.9,.3,1.2);box-shadow:0 14px 30px -10px rgba(0,0,0,.5);white-space:nowrap}
-.toast.show{transform:translate(-50%,0)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,24px);opacity:0;visibility:hidden;background:var(--char);color:var(--cream);padding:14px 22px;border-radius:4px;font-weight:600;font-size:15px;z-index:100;transition:transform .35s cubic-bezier(.2,.9,.3,1.2),opacity .25s,visibility .35s;box-shadow:0 14px 30px -10px rgba(0,0,0,.5);white-space:nowrap}
+.toast.show{transform:translate(-50%,0);opacity:1;visibility:visible}
 
 /* ---------- MOTION ---------- */
 /* masked word rise */
