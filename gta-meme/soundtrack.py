@@ -222,6 +222,14 @@ te = t_axis(9.45 - 5.0)
 ramp = (.25 + .75 * np.clip((te + 5.0 - 5.6) / (9.3 - 5.6), 0, 1)) * np.minimum(1, te / .3)
 place(mix, eng * ramp * .55, 5.0)
 
+# BUSTED: game sound drops away, hit + quick police siren whoop
+mix[int(8.35 * SR):int(9.45 * SR)] *= .35
+place(mix, boom() * .8, 8.35, 1)
+ts = t_axis(.9)
+whoop = np.sin(2 * np.pi * np.cumsum(np.where((ts * 2.5) % 1 < .5, 700 + 500 * ((ts * 5) % 1), 1200 - 500 * ((ts * 5) % 1))) / SR)
+whoop = lp(whoop, 3000) * np.minimum(1, ts / .03) * np.clip((.9 - ts) / .2, 0, 1) * .22
+place(mix, whoop, 8.45, 1)
+
 # TV off (everything cuts) / on
 mix[int(9.45 * SR):int(10.3 * SR)] *= 0
 place(mix, crt_off(), 9.45, .9)
