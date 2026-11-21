@@ -14,7 +14,7 @@
 Speak in natural Bangladeshi Bangla (bn-BD), like a friendly young tech creator on Facebook.
 Tone: warm, confident, upbeat, conversational — not robotic, not like a news reader.
 Pace: medium-fast and energetic, but clear.
-Make the opening question curious and catchy.
+Say the opening line like a confident promise straight to the viewer, with a short dramatic pause after "এক মিনিট দিন".
 Pause briefly (about half a second) after each numbered point's title, and a full second between sections.
 Pronounce "ক্লড" as the English name "Claude". Say English words like Fiverr, Upwork, Excel, CV naturally, the way Bangladeshi people say them.
 End with a friendly, inviting call to action.
@@ -23,9 +23,9 @@ End with a friendly, inviting call to action.
 ## 2) Paste into the main text box
 
 ```
-ফ্রি ক্লড দিয়ে কি সত্যিই আয় করা যায়?
+আমাকে মাত্র এক মিনিট দিন... আমি আপনাকে বলবো, একদম ফ্রি ক্লড দিয়ে আয় করার পাঁচটি উপায়।
 
-হ্যাঁ, যায়... যদি আপনি ক্লডকে একটা টুল হিসেবে ব্যবহার করেন। চলুন দেখি, পাঁচটি বাস্তব উপায়।
+শুধু ক্লডকে একটা টুল হিসেবে ব্যবহার করতে জানতে হবে। চলুন শুরু করি!
 
 এক... ফ্রিল্যান্স লেখা। ক্লড দিয়ে খসড়া তৈরি করুন, তারপর নিজে এডিট করে ফাইভার বা আপওয়ার্কের ক্লায়েন্টকে দিন।
 
