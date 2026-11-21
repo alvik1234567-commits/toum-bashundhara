@@ -362,10 +362,10 @@
         <rect width="1920" height="1080" fill="url(#vignette)"/>
       </g>
       <rect width="1920" height="560" fill="url(#topShade)"/>
-      <g font-family="Anton, Impact, sans-serif" text-anchor="middle" stroke="#0b0614" stroke-width="12" paint-order="stroke" stroke-linejoin="round">
-        <text id="t1" x="960" y="180" font-size="96" fill="#fff" opacity="0" letter-spacing="1">THERE ARE CHEAT CODES IN GTA 6...</text>
-        <text id="t2" x="960" y="300" font-size="96" fill="#fff" opacity="0" letter-spacing="1">...BUT THERE ARE NO CHEAT CODES</text>
-        <text id="t3" x="960" y="470" font-size="170" fill="#ffd23f" opacity="0" letter-spacing="3">IN REAL LIFE.</text>
+      <g font-family="'JetBrains Mono', monospace" text-anchor="middle" stroke="#040a1c" stroke-width="10" paint-order="stroke" stroke-linejoin="round">
+        <text id="t1" x="960" y="170" font-size="54" font-weight="700" fill="#ffffff" opacity="0" letter-spacing="3">THERE ARE CHEAT CODES IN GTA 6...</text>
+        <text id="t2" x="960" y="250" font-size="54" font-weight="700" fill="#ffffff" opacity="0" letter-spacing="3">...BUT THERE ARE NO CHEAT CODES</text>
+        <text id="t3" x="960" y="380" font-size="104" font-weight="800" fill="#4fd1ff" opacity="0" letter-spacing="10">IN REAL LIFE.</text>
       </g>
       <!-- end card -->
       <g id="endcard" opacity="0" font-family="'JetBrains Mono', monospace">
@@ -634,7 +634,7 @@ function render(t) {
     set('art', 'transform', `translate(960 540) scale(${1.04 + .08 * kb}) translate(${-960 - 30 * kb} -540)`);
     if (MODE === 'illustrated') set('heroCar', 'x', 1000 - 60 * eout(seg(t, 10.3, 14.5)));
     const fadeTxt = 1 - seg(t, 14.6, 14.9);
-    [['t1', 11.0, 1.35], ['t2', 12.55, 1.35], ['t3', 13.4, 1.6]].forEach(([id, st, from]) => {
+    [['t1', 11.0, 1.12], ['t2', 12.55, 1.12], ['t3', 13.4, 1.25]].forEach(([id, st, from]) => {
       const p = seg(t, st, st + .3);
       set(id, 'opacity', clamp(p * 3) * fadeTxt);
       const y = +$(id).getAttribute('y');
