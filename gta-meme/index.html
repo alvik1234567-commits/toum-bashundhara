@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cheat Code Ad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;700;800;900&display=block" rel="stylesheet">
+<style>
+  :root { --bg: #07050d; --ui: #ffffff; }
+  html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; }
+  #stage { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: 0 0; }
+  #stage svg { display: block; }
+  #ui { position: fixed; left: 16px; bottom: 16px; display: flex; gap: 8px; font: 600 14px Inter, system-ui, sans-serif; }
+  #ui button { background: rgba(255,255,255,.12); color: var(--ui); border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 8px 16px; cursor: pointer; font: inherit; }
+  body.record #ui { display: none; }
+  .db { fill: #d4d7df; stroke: #140c26; stroke-width: 4; }
+  .dg { fill: #ffd23f; stroke: #ffd23f; stroke-width: 14; opacity: 0; filter: url(#glow); }
+</style>
+</head>
+<body>
+<div id="stage">
+<svg id="v" xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <!-- ======== shared gradients ======== -->
+    <linearGradient id="wallG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1d1238"/><stop offset="1" stop-color="#3a2160"/>
+    </linearGradient>
+    <linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#22173a"/><stop offset="1" stop-color="#120c22"/>
+    </linearGradient>
+    <radialGradient id="ledG">
+      <stop offset="0" stop-color="#ff4fa3" stop-opacity=".85"/>
+      <stop offset=".5" stop-color="#8a3dff" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#8a3dff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="woodG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7a4a33"/><stop offset="1" stop-color="#4e2c1f"/>
+    </linearGradient>
+    <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#14205e"/><stop offset=".38" stop-color="#6a3a9c"/>
+      <stop offset=".62" stop-color="#ff6a6a"/><stop offset=".7" stop-color="#ffb36b"/>
+    </linearGradient>
+    <radialGradient id="sunG">
+      <stop offset="0" stop-color="#fff4c2"/><stop offset=".55" stop-color="#ffcf5a"/><stop offset="1" stop-color="#ff7a45"/>
+    </radialGradient>
+    <radialGradient id="sunGlow">
+      <stop offset="0" stop-color="#ffd27a" stop-opacity=".7"/><stop offset="1" stop-color="#ff6a6a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bldG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3d2475"/><stop offset="1" stop-color="#1c1038"/>
+    </linearGradient>
+    <linearGradient id="groundG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a3f5c"/><stop offset="1" stop-color="#14202e"/>
+    </linearGradient>
+    <linearGradient id="roadG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4a3b5e"/><stop offset="1" stop-color="#242030"/>
+    </linearGradient>
+    <linearGradient id="jetG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c9d1dd"/><stop offset=".5" stop-color="#8d97a8"/><stop offset="1" stop-color="#4d5566"/>
+    </linearGradient>
+    <linearGradient id="canopyG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe9a8"/><stop offset=".4" stop-color="#ff9e5e"/><stop offset="1" stop-color="#3b2a6b"/>
+    </linearGradient>
+    <linearGradient id="flameG" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#ffffff"/><stop offset=".3" stop-color="#7fd6ff"/><stop offset=".7" stop-color="#ff8a3d"/><stop offset="1" stop-color="#ff3d3d" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="carWin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd6a0"/><stop offset=".5" stop-color="#9a5bd6"/><stop offset="1" stop-color="#2a1a50"/>
+    </linearGradient>
+    <linearGradient id="glassG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".10"/><stop offset=".5" stop-color="#fff" stop-opacity=".03"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <!-- outro art -->
+    <linearGradient id="oSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f0830"/><stop offset=".35" stop-color="#4b1d6b"/>
+      <stop offset=".62" stop-color="#e0457b"/><stop offset=".8" stop-color="#ff9a3c"/>
+    </linearGradient>
+    <linearGradient id="oSun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff07a"/><stop offset=".6" stop-color="#ff9e45"/><stop offset="1" stop-color="#ff4f6e"/>
+    </linearGradient>
+    <mask id="sunStripes">
+      <rect x="0" y="0" width="1920" height="1080" fill="#fff"/>
+      <g fill="#000">
+        <rect x="900" y="620" width="700" height="8"/><rect x="900" y="660" width="700" height="12"/>
+        <rect x="900" y="702" width="700" height="16"/><rect x="900" y="746" width="700" height="20"/>
+        <rect x="900" y="792" width="700" height="26"/>
+      </g>
+    </mask>
+    <linearGradient id="towerG" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1a1240"/><stop offset=".75" stop-color="#2e1f66"/><stop offset="1" stop-color="#7a2f8a"/>
+    </linearGradient>
+    <linearGradient id="topShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity=".8"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="vignette" cx=".5" cy=".5" r=".75">
+      <stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".65"/>
+    </radialGradient>
+    <linearGradient id="oRoad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a1d4f"/><stop offset="1" stop-color="#120a1e"/>
+    </linearGradient>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="blur6" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>
+
+    <!-- arrow glyph, pointing up, centered on 0,0 -->
+    <path id="arrow" d="M0,-34 L30,0 L12,0 L12,32 L-12,32 L-12,0 L-30,0 Z"/>
+    <path id="star" d="M0,-20 L5.9,-6.2 L19,-6.2 L8.5,2.4 L12.4,16 L0,8 L-12.4,16 L-8.5,2.4 L-19,-6.2 L-5.9,-6.2 Z"/>
+
+    <!-- illustrated sports car, side view facing left; body colour = currentColor -->
+    <symbol id="car" viewBox="0 0 620 230" overflow="visible">
+      <ellipse cx="310" cy="212" rx="300" ry="16" fill="#000" opacity=".35"/>
+      <path d="M22,158 C20,128 40,112 86,104 L176,92 C214,58 264,40 336,40 L404,43 C456,46 496,76 528,100 L572,108 C600,114 610,134 606,160 L604,178 L24,178 Z"
+            fill="currentColor" stroke="#160c26" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M196,93 C228,66 270,55 334,55 L398,58 C432,62 462,80 486,97 Z" fill="url(#carWin)" stroke="#160c26" stroke-width="5"/>
+      <path d="M330,56 L326,95" stroke="#160c26" stroke-width="6"/>
+      <path d="M40,132 L590,132" stroke="#fff" stroke-opacity=".35" stroke-width="4"/>
+      <path d="M150,110 L560,116" stroke="#fff" stroke-opacity=".25" stroke-width="3"/>
+      <path d="M24,140 L60,136 L58,152 L24,156 Z" fill="#fff4c2" stroke="#160c26" stroke-width="4"/>
+      <path d="M604,128 L580,124 L580,142 L606,146 Z" fill="#ff3355" stroke="#160c26" stroke-width="4"/>
+      <g stroke="#160c26" stroke-width="6">
+        <circle cx="140" cy="176" r="44" fill="#1c1a24"/><circle cx="140" cy="176" r="24" fill="#cfd5e0"/>
+        <circle cx="476" cy="176" r="44" fill="#1c1a24"/><circle cx="476" cy="176" r="24" fill="#cfd5e0"/>
+      </g>
+      <g fill="#160c26"><circle cx="140" cy="176" r="7"/><circle cx="476" cy="176" r="7"/></g>
+    </symbol>
+
+    <!-- illustrated fighter jet, side view facing right, ~600 wide; origin at tail-bottom -->
+    <symbol id="jet" viewBox="-60 -110 680 180" overflow="visible">
+      <path d="M20,12 L104,12 L66,46 L22,46 Z" fill="#59627a" stroke="#141826" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M36,-20 L96,-20 L66,-104 L30,-104 Z" fill="url(#jetG)" stroke="#141826" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M44,-80 L70,-80" stroke="#ff4f6e" stroke-width="7"/>
+      <path d="M0,-4 C0,-16 20,-22 60,-24 L380,-30 C450,-28 520,-14 590,0 C520,12 450,20 380,22 L60,24 C20,22 0,10 0,-4 Z"
+            fill="url(#jetG)" stroke="#141826" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M376,-28 C404,-64 470,-58 506,-12 L440,-14 Z" fill="url(#canopyG)" stroke="#141826" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M400,-36 C420,-50 448,-50 470,-34" stroke="#fff" stroke-opacity=".7" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M180,8 L340,8 L250,66 L168,66 Z" fill="#6c768c" stroke="#141826" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M300,-4 L360,-4 L360,14 L300,14 Z" fill="#2b3142" stroke="#141826" stroke-width="4"/>
+      <path d="M80,0 L560,2" stroke="#fff" stroke-opacity=".35" stroke-width="3"/>
+      <path d="M120,-14 L320,-18" stroke="#ff4f6e" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="230" cy="-6" r="9" fill="none" stroke="#141826" stroke-width="4"/>
+      <path d="M560,0 L615,0" stroke="#141826" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+
+  <!-- ================= CAMERA (room + TV) ================= -->
+  <g id="cam">
+    <rect width="1920" height="790" fill="url(#wallG)"/>
+    <g id="stripes" opacity=".05" fill="#fff"></g>
+    <!-- window -->
+    <g transform="translate(110 130)">
+      <rect x="-14" y="-14" width="348" height="408" rx="8" fill="#140c26"/>
+      <rect width="320" height="380" fill="#0d1440"/>
+      <circle cx="240" cy="80" r="34" fill="#ffe9b0"/><circle cx="254" cy="72" r="30" fill="#0d1440"/>
+      <g id="winCity"></g>
+      <path d="M160,0 V380 M0,190 H320" stroke="#140c26" stroke-width="14"/>
+      <path d="M-30,-20 C40,120 30,260 -10,420 L-40,420 L-40,-20 Z" fill="#6b2a5e"/>
+      <path d="M350,-20 C290,120 300,260 336,420 L370,420 L370,-20 Z" fill="#6b2a5e"/>
+    </g>
+    <!-- frame poster right -->
+    <g transform="translate(1530 170)">
+      <rect width="250" height="320" rx="6" fill="#140c26"/>
+      <rect x="16" y="16" width="218" height="288" fill="#ff5a7a"/>
+      <circle cx="125" cy="150" r="70" fill="#ffd23f"/>
+      <path d="M16,250 L70,200 L120,240 L170,190 L234,250 V304 H16 Z" fill="#2b1a55"/>
+    </g>
+    <!-- LED backlight -->
+    <ellipse id="led" cx="960" cy="400" rx="640" ry="360" fill="url(#ledG)"/>
+    <!-- floor -->
+    <rect y="780" width="1920" height="300" fill="url(#floorG)"/>
+    <ellipse cx="960" cy="960" rx="820" ry="120" fill="#3b2463" opacity=".55"/>
+    <!-- plant left -->
+    <g transform="translate(250 780)">
+      <path d="M-50,0 L50,0 L38,-90 L-38,-90 Z" fill="#c2623f" stroke="#140c26" stroke-width="5"/>
+      <g fill="#3fae7a" stroke="#140c26" stroke-width="4">
+        <path d="M0,-90 C-60,-150 -110,-160 -130,-230 C-70,-210 -30,-170 0,-90 Z"/>
+        <path d="M0,-90 C40,-170 90,-200 120,-260 C130,-190 70,-140 0,-90 Z"/>
+        <path d="M0,-90 C-10,-180 10,-250 20,-310 C50,-240 30,-160 0,-90 Z"/>
+        <path d="M0,-90 C-70,-110 -120,-90 -160,-130 C-100,-150 -50,-130 0,-90 Z"/>
+      </g>
+    </g>
+    <!-- lamp right -->
+    <g transform="translate(1700 780)">
+      <rect x="-6" y="-420" width="12" height="420" fill="#140c26"/>
+      <ellipse cx="0" cy="0" rx="60" ry="12" fill="#140c26"/>
+      <ellipse cx="0" cy="-360" rx="150" ry="150" fill="#ffcf7a" opacity=".18" filter="url(#soft)"/>
+      <path d="M-70,-380 L70,-380 L46,-470 L-46,-470 Z" fill="#ffcf7a" stroke="#140c26" stroke-width="5"/>
+    </g>
+    <!-- console table -->
+    <rect x="400" y="650" width="1120" height="26" rx="6" fill="#8d5a3f" stroke="#140c26" stroke-width="5"/>
+    <rect x="420" y="674" width="1080" height="110" fill="url(#woodG)" stroke="#140c26" stroke-width="5"/>
+    <path d="M780,690 V770 M1140,690 V770" stroke="#140c26" stroke-width="5"/>
+    <circle cx="760" cy="730" r="6" fill="#140c26"/><circle cx="1160" cy="730" r="6" fill="#140c26"/>
+    <rect x="440" y="784" width="20" height="40" fill="#140c26"/><rect x="1460" y="784" width="20" height="40" fill="#140c26"/>
+    <!-- speakers -->
+    <rect x="440" y="520" width="74" height="132" rx="12" fill="#1b1530" stroke="#140c26" stroke-width="5"/>
+    <circle cx="477" cy="560" r="20" fill="#2c2448"/><circle cx="477" cy="616" r="14" fill="#2c2448"/>
+    <rect x="1406" y="520" width="74" height="132" rx="12" fill="#1b1530" stroke="#140c26" stroke-width="5"/>
+    <circle cx="1443" cy="560" r="20" fill="#2c2448"/><circle cx="1443" cy="616" r="14" fill="#2c2448"/>
+    <!-- TV -->
+    <path d="M880,632 L860,652 L1060,652 L1040,632 Z" fill="#0d0d12"/>
+    <rect x="546" y="156" width="828" height="478" rx="12" fill="#0b0b10" stroke="#000" stroke-width="3"/>
+    <rect x="560" y="170" width="800" height="450" fill="#000"/>
+    <svg x="560" y="170" width="800" height="450" viewBox="0 0 1600 900" preserveAspectRatio="none" overflow="hidden">
+      <rect width="1600" height="900" fill="#000"/>
+      <g id="screenFx">
+        <g id="game">
+          <rect width="1600" height="900" fill="url(#gSky)"/>
+          <circle cx="1060" cy="520" r="420" fill="url(#sunGlow)"/>
+          <circle cx="1060" cy="520" r="190" fill="url(#sunG)"/>
+          <path d="M0,560 L180,470 L320,520 L520,430 L700,510 L900,450 L1120,520 L1300,440 L1460,500 L1600,460 V620 H0 Z" fill="#7a3d86" opacity=".55"/>
+          <g id="gSkyline"></g>
+          <rect y="610" width="1600" height="290" fill="url(#groundG)"/>
+          <polygon points="650,610 950,610 1500,900 100,900" fill="url(#roadG)"/>
+          <polyline points="650,610 100,900" stroke="#ffcf7a" stroke-opacity=".5" stroke-width="4" fill="none"/>
+          <polyline points="950,610 1500,900" stroke="#ffcf7a" stroke-opacity=".5" stroke-width="4" fill="none"/>
+          <g id="gDashes" fill="#ffe08a"></g>
+          <g id="gPalms"></g>
+          <use href="#car" x="1150" y="660" width="380" height="141" color="#ff3d6e"/>
+          <!-- jet -->
+          <ellipse id="jetShadow" cx="800" cy="800" rx="320" ry="26" fill="#000" opacity="0"/>
+          <circle id="spawnRing" cx="800" cy="600" r="10" fill="none" stroke="#bff3ff" stroke-width="16" opacity="0"/>
+          <circle id="spawnRing2" cx="800" cy="600" r="10" fill="none" stroke="#ff7ad9" stroke-width="8" opacity="0"/>
+          <g id="sparks" fill="#fff6c2"></g>
+          <g id="jetWrap" opacity="0">
+            <g id="jetInner">
+              <ellipse id="flame" cx="-10" cy="-2" rx="120" ry="20" fill="url(#flameG)"/>
+              <use href="#jet" x="0" y="0" width="680" height="180" transform="translate(-60 -110)"/>
+            </g>
+          </g>
+          <!-- HUD -->
+          <g id="hud" font-family="Anton, Impact, sans-serif">
+            <text x="1550" y="80" text-anchor="end" font-size="44" fill="#fff" stroke="#000" stroke-width="8" paint-order="stroke">21:37</text>
+            <text x="1550" y="146" text-anchor="end" font-size="64" fill="#7ee36f" stroke="#000" stroke-width="10" paint-order="stroke">$4,206,900</text>
+            <g transform="translate(1316 196)" fill="none" stroke="#fff" stroke-width="4">
+              <use href="#star" x="0"/><use href="#star" x="50"/><use href="#star" x="100"/><use href="#star" x="150"/><use href="#star" x="200"/>
+            </g>
+            <g transform="translate(160 730)">
+              <circle r="112" fill="#000" opacity=".35"/>
+              <circle r="100" fill="#2a3c4f" stroke="#fff" stroke-width="5"/>
+              <path d="M-100,-20 H100 M-30,-100 V100 M-80,60 L60,-80 M20,30 H95" stroke="#6f8aa6" stroke-width="10"/>
+              <circle cx="60" cy="-50" r="10" fill="#ffd23f"/>
+              <path d="M0,-18 L14,16 L0,8 L-14,16 Z" fill="#fff" stroke="#000" stroke-width="3"/>
+              <circle cx="0" cy="-100" r="16" fill="#000" stroke="#fff" stroke-width="3"/>
+              <text y="-91" text-anchor="middle" font-size="22" fill="#fff">N</text>
+            </g>
+            <rect x="50" y="858" width="140" height="14" fill="#1c3b1c" stroke="#000" stroke-width="3"/><rect x="50" y="858" width="122" height="14" fill="#5ccf55"/>
+            <rect x="198" y="858" width="70" height="14" fill="#18324a" stroke="#000" stroke-width="3"/><rect x="198" y="858" width="56" height="14" fill="#4aa8ff"/>
+          </g>
+          <!-- cheat input feed -->
+          <g id="feed" opacity="0">
+            <rect x="440" y="760" width="720" height="104" rx="52" fill="#000" opacity=".55"/>
+            <g id="feedArrows"></g>
+          </g>
+          <!-- cheat activated -->
+          <g id="cheatMsg" opacity="0">
+            <rect x="50" y="50" width="640" height="150" rx="10" fill="#000" opacity=".65"/>
+            <text x="80" y="128" font-family="Anton, Impact, sans-serif" font-size="66" fill="#fff">CHEAT ACTIVATED</text>
+            <text x="82" y="178" font-family="Inter, sans-serif" font-weight="800" font-size="34" fill="#ffd23f" letter-spacing="2">SPAWN: FIGHTER JET</text>
+          </g>
+          <rect id="gFlash" width="1600" height="900" fill="#fff" opacity="0"/>
+        </g>
+        <rect id="crtWhite" width="1600" height="900" fill="#e9f4ff" opacity="0"/>
+      </g>
+      <rect id="scan" width="1600" height="900" fill="none"/>
+    </svg>
+    <rect id="glass" x="560" y="170" width="800" height="450" fill="url(#glassG)"/>
+  </g>
+
+  <!-- ================= FOREGROUND CONTROLLER ================= -->
+  <g id="ctrlWrap">
+    <g id="ctrl" transform="translate(960 935) scale(1.15)">
+      <ellipse cx="0" cy="250" rx="420" ry="60" fill="#000" opacity=".35" filter="url(#blur6)"/>
+      <path d="M-150,-190 L150,-190 C250,-190 320,-160 340,-90 C365,0 395,130 380,200 C370,260 300,275 265,230 C235,190 215,130 170,110 L-170,110 C-215,130 -235,190 -265,230 C-300,275 -370,260 -380,200 C-395,130 -365,0 -340,-90 C-320,-160 -250,-190 -150,-190 Z"
+            fill="#f2f3f7" stroke="#140c26" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M-330,-60 C-300,-150 -240,-170 -170,-176" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M-170,110 L-118,-30 L118,-30 L170,110 Z" fill="#1e1e28" stroke="#140c26" stroke-width="5" stroke-linejoin="round"/>
+      <rect x="-128" y="-186" width="256" height="150" rx="22" fill="#e6e8ee" stroke="#140c26" stroke-width="5"/>
+      <path id="lightbar" d="M-134,-170 V-50 M134,-170 V-50" stroke="#4aa8ff" stroke-width="8" stroke-linecap="round"/>
+      <g fill="#140c26" opacity=".5"><circle cx="-20" cy="-8" r="4"/><circle cx="0" cy="-8" r="4"/><circle cx="20" cy="-8" r="4"/><circle cx="-10" cy="4" r="4"/><circle cx="10" cy="4" r="4"/></g>
+      <!-- d-pad: each direction pops + glows when pressed -->
+      <g transform="translate(-235 -80)" stroke-linejoin="round">
+        <g id="dpU"><path class="dg" d="M-14,-18 L14,-18 L14,-48 Q0,-56 -14,-48 Z"/><path class="db" d="M-14,-18 L14,-18 L14,-48 Q0,-56 -14,-48 Z"/></g>
+        <g id="dpD"><path class="dg" d="M-14,18 L14,18 L14,48 Q0,56 -14,48 Z"/><path class="db" d="M-14,18 L14,18 L14,48 Q0,56 -14,48 Z"/></g>
+        <g id="dpL"><path class="dg" d="M-18,-14 L-18,14 L-48,14 Q-56,0 -48,-14 Z"/><path class="db" d="M-18,-14 L-18,14 L-48,14 Q-56,0 -48,-14 Z"/></g>
+        <g id="dpR"><path class="dg" d="M18,-14 L18,14 L48,14 Q56,0 48,-14 Z"/><path class="db" d="M18,-14 L18,14 L48,14 Q56,0 48,-14 Z"/></g>
+      </g>
+      <!-- face buttons -->
+      <g transform="translate(235 -80)" stroke="#140c26" stroke-width="4">
+        <circle cx="0" cy="-40" r="22" fill="#d4d7df"/><circle cx="40" cy="0" r="22" fill="#d4d7df"/>
+        <circle cx="0" cy="40" r="22" fill="#d4d7df"/><circle cx="-40" cy="0" r="22" fill="#d4d7df"/>
+        <path d="M0,-52 L11,-33 L-11,-33 Z" fill="none" stroke="#3fb6a8" stroke-width="3.5"/>
+        <circle cx="40" cy="0" r="10" fill="none" stroke="#ff5a6e" stroke-width="3.5"/>
+        <path d="M-9,31 L9,49 M9,31 L-9,49" stroke="#6f8cff" stroke-width="3.5"/>
+        <rect x="-49" y="-9" width="18" height="18" fill="none" stroke="#e57ad6" stroke-width="3.5"/>
+      </g>
+      <!-- sticks -->
+      <circle cx="-110" cy="42" r="54" fill="#121218" stroke="#140c26" stroke-width="4"/>
+      <circle cx="110" cy="42" r="54" fill="#121218" stroke="#140c26" stroke-width="4"/>
+      <circle id="stickGlow" cx="-110" cy="42" r="64" fill="none" stroke="#ffd23f" stroke-width="14" opacity="0" filter="url(#glow)"/>
+      <g id="stickL" transform="translate(-110 42)">
+        <circle r="42" fill="#2e2e38" stroke="#0a0a10" stroke-width="4"/><circle r="30" fill="#3d3d4a"/><circle r="30" fill="none" stroke="#565666" stroke-width="3" stroke-dasharray="4 5"/>
+      </g>
+      <g transform="translate(110 42)">
+        <circle r="42" fill="#2e2e38" stroke="#0a0a10" stroke-width="4"/><circle r="30" fill="#3d3d4a"/><circle r="30" fill="none" stroke="#565666" stroke-width="3" stroke-dasharray="4 5"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- arrow pop near controller -->
+  <g id="pop" opacity="0" transform="translate(560 730)">
+    <circle r="70" fill="#ffd23f" stroke="#140c26" stroke-width="8"/>
+    <use id="popArrow" href="#arrow" fill="#140c26" transform="scale(1.3)"/>
+  </g>
+  <g id="motion" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0"></g>
+
+  <!-- ================= OUTRO ================= -->
+  <g id="outro" opacity="0">
+    <rect width="1920" height="1080" fill="#000"/>
+    <g id="outroInner">
+      <g id="art">
+        <rect width="1920" height="1080" fill="url(#oSky)"/>
+        <circle cx="1250" cy="640" r="440" fill="url(#sunGlow)"/>
+        <circle cx="1250" cy="640" r="250" fill="url(#oSun)" mask="url(#sunStripes)"/>
+        <path d="M0,800 L200,700 L380,760 L600,660 L820,740 L1060,680 L1300,740 L1520,660 L1760,720 L1920,690 V860 H0 Z" fill="#6a2a7e" opacity=".6"/>
+        <g id="oSkyline"></g>
+        <!-- hero tower -->
+        <g stroke="#0e0820" stroke-width="7" stroke-linejoin="round">
+          <path d="M318,0 L318,-60 L330,-60" fill="none"/>
+          <rect x="300" y="40" width="60" height="60" fill="url(#towerG)"/>
+          <rect x="250" y="100" width="160" height="80" fill="url(#towerG)"/>
+          <rect x="200" y="180" width="260" height="100" fill="url(#towerG)"/>
+          <rect x="140" y="280" width="380" height="820" fill="url(#towerG)"/>
+          <rect x="520" y="470" width="260" height="620" fill="#22184e"/>
+        </g>
+        <line x1="330" y1="40" x2="330" y2="-40" stroke="#0e0820" stroke-width="8"/>
+        <circle cx="330" cy="-40" r="9" fill="#ff4f6e"/>
+        <g id="towerWin"></g>
+        <path d="M516,284 V1080" stroke="#ff6fa8" stroke-width="6" opacity=".8"/>
+        <!-- ground + road -->
+        <rect y="860" width="1920" height="220" fill="url(#oRoad)"/>
+        <path d="M0,870 H1920" stroke="#ff6fa8" stroke-width="5" opacity=".7"/>
+        <g fill="#ffb36b" opacity=".75">
+          <rect x="60" y="990" width="160" height="12"/><rect x="380" y="990" width="160" height="12"/><rect x="700" y="990" width="160" height="12"/>
+        </g>
+        <g id="oPalms"></g>
+        <use id="heroCar" href="#car" x="1000" y="720" width="760" height="282" color="#ffc23a"/>
+        <rect width="1920" height="1080" fill="url(#vignette)"/>
+      </g>
+      <rect width="1920" height="560" fill="url(#topShade)"/>
+      <g font-family="Anton, Impact, sans-serif" text-anchor="middle" stroke="#0b0614" stroke-width="12" paint-order="stroke" stroke-linejoin="round">
+        <text id="t1" x="960" y="180" font-size="96" fill="#fff" opacity="0" letter-spacing="1">THERE ARE CHEAT CODES IN GTA 6...</text>
+        <text id="t2" x="960" y="300" font-size="96" fill="#fff" opacity="0" letter-spacing="1">...BUT THERE ARE NO CHEAT CODES</text>
+        <text id="t3" x="960" y="470" font-size="170" fill="#ffd23f" opacity="0" letter-spacing="3">IN REAL LIFE.</text>
+      </g>
+      <!-- end card -->
+      <g id="endcard" opacity="0">
+        <rect width="1920" height="1080" fill="#0b0614" opacity=".78"/>
+        <text id="brand" x="960" y="330" text-anchor="middle" font-family="Inter, sans-serif" font-weight="900" font-size="52" letter-spacing="10" fill="#fff" opacity="0">YOUR BRAND</text>
+        <g id="enroll" opacity="0">
+          <text x="972" y="582" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="210" fill="#ff4f8b">GET ENROLLED NOW</text>
+          <text x="960" y="570" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="210" fill="#ffd23f" stroke="#0b0614" stroke-width="10" paint-order="stroke">GET ENROLLED NOW</text>
+        </g>
+        <text id="tag" x="960" y="670" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="40" fill="#e8ddff" opacity="0">Real skills. Real progress. No shortcuts.</text>
+        <g id="cta" opacity="0" transform="translate(960 800)">
+          <rect x="-330" y="-56" width="660" height="112" rx="56" fill="#ffd23f" stroke="#0b0614" stroke-width="6"/>
+          <text id="site" y="16" text-anchor="middle" font-family="Inter, sans-serif" font-weight="900" font-size="44" fill="#0b0614">yourwebsite.com</text>
+        </g>
+      </g>
+    </g>
+    <rect id="outroWhite" width="1920" height="1080" fill="#e9f4ff" opacity="0"/>
+  </g>
+</svg>
+</div>
+<div id="ui"><button id="replay">Replay</button></div>
+
+<script>
+// ---------- config (override with ?brand=..&site=..&tag=..) ----------
+const Q = new URLSearchParams(location.search);
+const CFG = {
+  brand: Q.get('brand') || 'YOUR BRAND',
+  site:  Q.get('site')  || 'yourwebsite.com',
+  tag:   Q.get('tag')   || 'Real skills. Real progress. No shortcuts.',
+};
+const DURATION = 19;
+const NS = 'http://www.w3.org/2000/svg';
+const $ = id => document.getElementById(id);
+$('brand').textContent = CFG.brand.toUpperCase();
+$('site').textContent = CFG.site;
+$('tag').textContent = CFG.tag;
+
+// ---------- deterministic generators ----------
+let seed = 7;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function skyline(g, x0, x1, base, hMin, hMax, fill, winFill, winP, scale) {
+  let x = x0;
+  while (x < x1) {
+    const w = (40 + rnd() * 70) * scale, h = hMin + rnd() * (hMax - hMin);
+    el('rect', { x, y: base - h, width: w, height: h + 2, fill }, g);
+    if (rnd() < .3) el('rect', { x: x + w * .4, y: base - h - 30 * scale, width: 4 * scale, height: 30 * scale, fill }, g);
+    for (let wy = base - h + 12 * scale; wy < base - 10 * scale; wy += 18 * scale)
+      for (let wx = x + 8 * scale; wx < x + w - 10 * scale; wx += 14 * scale)
+        if (rnd() < winP) el('rect', { x: wx, y: wy, width: 6 * scale, height: 8 * scale, fill: winFill, opacity: .5 + rnd() * .5 }, g);
+    x += w + 4 * scale;
+  }
+}
+function palm(g, x, y, h, color, lean) {
+  const tx = x + lean, ty = y - h;
+  el('path', { d: `M${x},${y} Q${x + lean * .2},${y - h * .5} ${tx},${ty}`, stroke: color, 'stroke-width': h * .06, fill: 'none', 'stroke-linecap': 'round' }, g);
+  const L = h * .55;
+  [-170, -140, -110, -70, -40, -10, 20, 200].forEach(a => {
+    const r = a * Math.PI / 180;
+    const ex = tx + Math.cos(r) * L, ey = ty + Math.sin(r) * L * .6 + L * .35;
+    const cx = tx + Math.cos(r) * L * .5, cy = ty + Math.sin(r) * L * .5 - L * .25;
+    const nx = -Math.sin(r) * L * .12, ny = Math.cos(r) * L * .12;
+    el('path', { d: `M${tx},${ty} Q${cx + nx},${cy + ny} ${ex},${ey} Q${cx - nx},${cy - ny} ${tx},${ty} Z`, fill: color }, g);
+  });
+}
+// wallpaper stripes
+for (let x = 0; x < 1920; x += 60) el('rect', { x, y: 0, width: 22, height: 790 }, $('stripes'));
+// window city
+seed = 3; skyline($('winCity'), 0, 320, 380, 60, 220, '#1a1650', '#ffd27a', .35, .7);
+// game
+seed = 11; skyline($('gSkyline'), -20, 1620, 612, 60, 300, 'url(#bldG)', '#ffd27a', .28, 1);
+for (let i = 0; i < 9; i++) {
+  const v0 = (i + .1) / 9, v1 = (i + .55) / 9;
+  const y0 = 610 + 290 * v0 * v0, y1 = 610 + 290 * v1 * v1;
+  const w0 = 2 + 10 * v0 * v0, w1 = 2 + 10 * v1 * v1;
+  el('polygon', { points: `${800 - w0},${y0} ${800 + w0},${y0} ${800 + w1},${y1} ${800 - w1},${y1}` }, $('gDashes'));
+}
+[[560, 640, 120, 12], [420, 690, 200, 18], [230, 770, 330, 26], [1040, 640, 120, -12], [1600, 900, 520, -40], [20, 900, 520, 40]]
+  .forEach(([x, y, h, l]) => palm($('gPalms'), x, y, h, '#1a0f2e', l));
+// outro
+seed = 21; skyline($('oSkyline'), 760, 1940, 862, 80, 340, '#2a1452', '#ffb36b', .25, 1.3);
+seed = 5;
+for (let wy = 300; wy < 1060; wy += 34) for (let wx = 160; wx < 500; wx += 30)
+  if (rnd() < .45) el('rect', { x: wx, y: wy, width: 16, height: 20, fill: rnd() < .7 ? '#ffd27a' : '#7fe0ff', opacity: .55 + rnd() * .45 }, $('towerWin'));
+for (let wy = 490; wy < 1060; wy += 34) for (let wx = 540; wx < 760; wx += 30)
+  if (rnd() < .35) el('rect', { x: wx, y: wy, width: 16, height: 20, fill: '#ffd27a', opacity: .4 + rnd() * .4 }, $('towerWin'));
+palm($('oPalms'), 1860, 1080, 760, '#140a24', -60);
+palm($('oPalms'), 960, 880, 380, '#1c0f33', 25);
+palm($('oPalms'), 820, 880, 290, '#1c0f33', -18);
+
+// ---------- cheat sequence ----------
+const SEQ = ['U', 'U', 'D', 'D', 'L', 'R', 'L', 'R'];
+const DIR = { U: [0, -1, 0], D: [0, 1, 180], L: [-1, 0, -90], R: [1, 0, 90] };
+const T0 = 1.0, STEP = .42;
+const feedEls = SEQ.map((d, i) => {
+  const g = el('g', { transform: `translate(${800 + (i - 3.5) * 84} 812)`, opacity: 0 }, $('feedArrows'));
+  const inner = el('g', {}, g);
+  el('use', { href: '#arrow', fill: '#ffd23f', stroke: '#000', 'stroke-width': 5, transform: `rotate(${DIR[d][2]}) scale(.95)` }, inner);
+  return [g, inner];
+});
+const motionEls = [0, 1, 2].map(() => el('line', {}, $('motion')));
+const sparkEls = Array.from({ length: 18 }, (_, i) => {
+  seed = 100 + i; return [el('circle', { r: 6 }, $('sparks')), rnd() * Math.PI * 2, 220 + rnd() * 420, 3 + rnd() * 7];
+});
+
+// ---------- easing ----------
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, p) => a + (b - a) * p;
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const eout = x => 1 - Math.pow(1 - x, 3);
+const back = x => { const c1 = 2.2, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const set = (id, k, v) => $(id).setAttribute(k, v);
+
+// ---------- the timeline ----------
+function render(t) {
+  // ---- scene 1: cheat input ----
+  let sx = 0, sy = 0, amt = 0, cur = -1, curU = 0;
+  SEQ.forEach((d, i) => {
+    const u = t - (T0 + i * STEP);
+    if (u >= 0 && u < .38) {
+      const a = u < .08 ? eout(u / .08) : u < .24 ? 1 : 1 - seg(u, .24, .36);
+      sx = DIR[d][0] * a; sy = DIR[d][1] * a; amt = a; cur = i; curU = u;
+    }
+    const [g, inner] = feedEls[i];
+    const p = seg(u, 0, .16);
+    g.setAttribute('opacity', p);
+    inner.setAttribute('transform', `scale(${u >= 0 ? lerp(1.8, 1, back(p)) : 1})`);
+  });
+  const SX = -110 + sx * 26, SY = 42 + sy * 26;
+  set('stickL', 'transform', `translate(${SX} ${SY})`);
+  set('stickGlow', 'opacity', amt * .9);
+  // d-pad: pressed direction pops, turns yellow and glows
+  ['U', 'D', 'L', 'R'].forEach(d => {
+    const g = $('dp' + d);
+    const a = cur >= 0 && SEQ[cur] === d ? amt : 0;
+    const [dx, dy] = DIR[d];
+    const cx = dx * 34, cy = dy * 34;
+    g.setAttribute('transform', `translate(${cx} ${cy}) scale(${1 + .45 * a}) translate(${-cx} ${-cy})`);
+    g.querySelector('.dg').style.opacity = a;
+    g.querySelector('.db').style.fill = a > .05 ? `rgb(${lerp(212, 255, a)},${lerp(215, 210, a)},${lerp(223, 63, a)})` : '';
+  });
+
+  // arrow pop
+  if (cur >= 0) {
+    const p = seg(curU, 0, .14), out = seg(curU, .26, .38);
+    set('pop', 'opacity', 1 - out);
+    set('pop', 'transform', `translate(560 730) scale(${lerp(.3, 1, back(p))}) rotate(${(cur % 2 ? 6 : -6)})`);
+    set('popArrow', 'transform', `rotate(${DIR[SEQ[cur]][2]}) scale(1.3)`);
+    // motion lines around the stick
+    const [dx, dy] = DIR[SEQ[cur]];
+    const cx = 960 + (-110) * 1.15, cy = 935 + 42 * 1.15;
+    motionEls.forEach((m, k) => {
+      const off = (k - 1) * 34, px = -dy, py = dx;
+      const bx = cx + dx * 100 + px * off, by = cy + dy * 100 + py * off;
+      m.setAttribute('x1', bx); m.setAttribute('y1', by);
+      m.setAttribute('x2', bx + dx * 40); m.setAttribute('y2', by + dy * 40);
+    });
+    set('motion', 'opacity', amt * (1 - out));
+  } else { set('pop', 'opacity', 0); set('motion', 'opacity', 0); }
+
+  set('feed', 'opacity', seg(t, .8, 1.0) * (1 - seg(t, 4.9, 5.2)));
+  // feed pulse when complete
+  const done = seg(t, 4.35, 4.5) * (1 - seg(t, 4.9, 5.2));
+  set('feedArrows', 'transform', `translate(800 812) scale(${1 + done * .08 * Math.abs(Math.sin(t * 18))}) translate(-800 -812)`);
+
+  const cm = seg(t, 4.35, 4.55);
+  set('cheatMsg', 'opacity', cm * (1 - seg(t, 8.0, 8.5)));
+  set('cheatMsg', 'transform', `translate(50 125) scale(${lerp(1.25, 1, back(cm))}) translate(-50 -125)`);
+
+  // ---- scene 2: spawn jet + zoom ----
+  set('gFlash', 'opacity', Math.max(0, 1 - Math.abs(t - 4.95) / .25) * .95);
+  const sp = seg(t, 4.95, 5.5);
+  const bob = Math.sin(t * 2.6) * 8;
+  set('jetWrap', 'opacity', t > 4.95 ? 1 : 0);
+  set('jetWrap', 'transform', `translate(${360 + 60 * eout(seg(t, 5.0, 9.4))} ${lerp(420, 640, eout(sp)) + bob}) scale(${1.55 * lerp(.2, 1, back(sp))})`);
+  set('flame', 'transform', `translate(-10 -2) scale(${.85 + .2 * Math.sin(t * 47) + .1 * Math.sin(t * 31)} 1) translate(10 2)`);
+  set('jetShadow', 'opacity', .45 * eout(sp));
+  set('jetShadow', 'rx', 300 - bob * 2);
+  [['spawnRing', 1100, 16], ['spawnRing2', 800, 8]].forEach(([id, R, w], k) => {
+    const p = seg(t, 4.95 + k * .08, 5.6 + k * .08);
+    set(id, 'r', 10 + R * eout(p)); set(id, 'opacity', p > 0 && p < 1 ? 1 - p : 0); set(id, 'stroke-width', w * (1 - p) + 1);
+  });
+  sparkEls.forEach(([c, a, d, r]) => {
+    const p = seg(t, 4.95, 5.9);
+    c.setAttribute('cx', 800 + Math.cos(a) * d * eout(p)); c.setAttribute('cy', 600 + Math.sin(a) * d * eout(p) * .7);
+    c.setAttribute('r', r * (1 - p)); c.setAttribute('opacity', p > 0 && p < 1 ? 1 : 0);
+  });
+
+  const zp = eio(seg(t, 5.6, 9.3));
+  const s = lerp(1, 2.4, zp);
+  const shake = t > 4.95 && t < 5.5 ? (1 - seg(t, 4.95, 5.5)) * 7 : 0;
+  set('cam', 'transform', `translate(${960 + Math.sin(t * 93) * shake} ${540 + Math.cos(t * 71) * shake}) scale(${s}) translate(-960 ${-lerp(540, 395, zp)})`);
+  set('glass', 'opacity', 1 - zp);
+  set('led', 'opacity', .75 + .25 * Math.sin(t * 2.1) + (t > 4.9 && t < 5.4 ? .4 : 0));
+  set('lightbar', 'stroke', t > 4.4 && t < 5.4 && Math.floor(t * 10) % 2 ? '#ff4f8b' : '#4aa8ff');
+  const cd = eio(seg(t, 5.3, 6.5));
+  set('ctrlWrap', 'transform', `translate(0 ${cd * 560 + Math.sin(t * 1.7) * 3 * (1 - cd)}) `);
+
+  // ---- scene 3a: TV switches off (CRT) ----
+  const a = seg(t, 9.45, 9.62), b = seg(t, 9.62, 9.8);
+  const sy3 = lerp(1, .006, eout(a)), sx3 = lerp(1, .004, eout(b));
+  set('screenFx', 'transform', `translate(800 450) scale(${sx3} ${sy3}) translate(-800 -450)`);
+  set('crtWhite', 'opacity', a * .95);
+  set('screenFx', 'opacity', 1 - seg(t, 9.8, 10.05));
+
+  // ---- scene 3b: intro art + message ----
+  const on = t >= 10.3;
+  set('outro', 'opacity', on ? 1 : 0);
+  if (on) {
+    const ox = seg(t, 10.3, 10.42), oy = seg(t, 10.42, 10.62);
+    set('outroInner', 'transform', `translate(960 540) scale(${lerp(.004, 1, eout(ox))} ${lerp(.006, 1, eout(oy))}) translate(-960 -540)`);
+    set('outroWhite', 'opacity', (1 - seg(t, 10.5, 10.95)) * .9);
+    const kb = seg(t, 10.3, DURATION);
+    set('art', 'transform', `translate(960 540) scale(${1.04 + .08 * kb}) translate(${-960 - 30 * kb} -540)`);
+    set('heroCar', 'x', 1000 - 60 * eout(seg(t, 10.3, 14.5)));
+    const fadeTxt = 1 - seg(t, 14.6, 14.9);
+    [['t1', 11.0, 1.35], ['t2', 12.55, 1.35], ['t3', 13.4, 1.6]].forEach(([id, st, from]) => {
+      const p = seg(t, st, st + .3);
+      set(id, 'opacity', clamp(p * 3) * fadeTxt);
+      const y = +$(id).getAttribute('y');
+      set(id, 'transform', `translate(960 ${y}) scale(${lerp(from, 1, back(p))}) translate(-960 ${-y})`);
+    });
+    // end card
+    set('endcard', 'opacity', seg(t, 14.7, 15.1));
+    const e = seg(t, 15.05, 15.35);
+    set('enroll', 'opacity', clamp(e * 3));
+    const jolt = t > 15.3 && t < 15.6 ? Math.sin(t * 120) * (1 - seg(t, 15.3, 15.6)) * 8 : 0;
+    set('enroll', 'transform', `translate(${960 + jolt} 520) scale(${lerp(2.2, 1, back(e))}) translate(-960 -520)`);
+    set('brand', 'opacity', seg(t, 15.5, 15.8));
+    set('tag', 'opacity', seg(t, 15.8, 16.1));
+    const c = seg(t, 16.1, 16.4);
+    set('cta', 'opacity', c);
+    set('cta', 'transform', `translate(960 800) scale(${lerp(.6, 1, back(c)) * (1 + .03 * Math.sin(t * 6) * seg(t, 16.4, 16.8))})`);
+  }
+}
+window.render = render;
+window.DURATION = DURATION;
+
+// ---------- fit + playback ----------
+function fit() {
+  const k = Math.min(innerWidth / 1920, innerHeight / 1080);
+  $('stage').style.transform = `scale(${k}) translate(-50%, -50%)`;
+}
+addEventListener('resize', fit); fit();
+if (Q.has('record')) { document.body.classList.add('record'); render(0); }
+else {
+  let start;
+  const loop = now => {
+    if (start === undefined) start = now;
+    const t = (now - start) / 1000;
+    render(Math.min(t, DURATION));
+    if (t > DURATION + 1.5) start = now;
+    requestAnimationFrame(loop);
+  };
+  document.fonts.ready.then(() => requestAnimationFrame(loop));
+  $('replay').onclick = () => { start = undefined; };
+}
+</script>
+</body>
+</html>
