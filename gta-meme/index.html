@@ -370,7 +370,7 @@
       <!-- end card -->
       <g id="endcard" opacity="0">
         <rect width="1920" height="1080" fill="#0b0614" opacity=".78"/>
-        <text id="brand" x="960" y="330" text-anchor="middle" font-family="Inter, sans-serif" font-weight="900" font-size="52" letter-spacing="10" fill="#fff" opacity="0">YOUR BRAND</text>
+        <image id="brand" href="cert-logo-white.png" x="800" y="60" width="320" height="310" preserveAspectRatio="xMidYMid meet" opacity="0"/>
         <g id="enroll" opacity="0">
           <text x="972" y="582" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="210" fill="#ff4f8b">GET ENROLLED NOW</text>
           <text x="960" y="570" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="210" fill="#ffd23f" stroke="#0b0614" stroke-width="10" paint-order="stroke">GET ENROLLED NOW</text>
@@ -398,8 +398,7 @@
 // ---------- config (override with ?brand=..&site=..&tag=..) ----------
 const Q = new URLSearchParams(location.search);
 const CFG = {
-  brand: Q.get('brand') || 'YOUR BRAND',
-  site:  Q.get('site')  || 'yourwebsite.com',
+  site:  Q.get('site')  || 'cert-earth.com',
   tag:   Q.get('tag')   || 'Real skills. Real progress. No shortcuts.',
 };
 const DURATION = 19;
@@ -423,7 +422,6 @@ window.ready = Promise.all([g3dReady, Promise.all(['game.jpg', 'game-jet.jpg', '
 });
 const NS = 'http://www.w3.org/2000/svg';
 const $ = id => document.getElementById(id);
-$('brand').textContent = CFG.brand.toUpperCase();
 $('site').textContent = CFG.site;
 $('tag').textContent = CFG.tag;
 
@@ -634,6 +632,7 @@ function render(t) {
     const jolt = t > 15.3 && t < 15.6 ? Math.sin(t * 120) * (1 - seg(t, 15.3, 15.6)) * 8 : 0;
     set('enroll', 'transform', `translate(${960 + jolt} 520) scale(${lerp(2.2, 1, back(e))}) translate(-960 -520)`);
     set('brand', 'opacity', seg(t, 15.5, 15.8));
+    set('brand', 'transform', `translate(960 215) scale(${lerp(.85, 1, eout(seg(t, 15.5, 15.9)))}) translate(-960 -215)`);
     set('tag', 'opacity', seg(t, 15.8, 16.1));
     const c = seg(t, 16.1, 16.4);
     set('cta', 'opacity', c);

@@ -27,7 +27,7 @@ const stills = args.includes('--stills');
 
 (async () => {
   const q = new URLSearchParams({ record: '1' });
-  for (const k of ['brand', 'site', 'tag', 'style']) if (opt(k)) q.set(k, opt(k));
+  for (const k of ['site', 'tag', 'style']) if (opt(k)) q.set(k, opt(k));
   const srv = await serve();
   const browser = await chromium.launch({ args: ['--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
