@@ -6,7 +6,7 @@
 <title>Cheat Code Ad</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;700;800;900&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=block" rel="stylesheet">
 <style>
   :root { --bg: #07050d; --ui: #ffffff; }
   html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; }
@@ -368,17 +368,32 @@
         <text id="t3" x="960" y="470" font-size="170" fill="#ffd23f" opacity="0" letter-spacing="3">IN REAL LIFE.</text>
       </g>
       <!-- end card -->
-      <g id="endcard" opacity="0">
-        <rect width="1920" height="1080" fill="#0b0614" opacity=".78"/>
-        <image id="brand" href="cert-logo-white.png" x="800" y="60" width="320" height="310" preserveAspectRatio="xMidYMid meet" opacity="0"/>
-        <g id="enroll" opacity="0">
-          <text x="972" y="582" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="210" fill="#ff4f8b">GET ENROLLED NOW</text>
-          <text x="960" y="570" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="210" fill="#ffd23f" stroke="#0b0614" stroke-width="10" paint-order="stroke">GET ENROLLED NOW</text>
+      <g id="endcard" opacity="0" font-family="'JetBrains Mono', monospace">
+        <defs>
+          <pattern id="hudGrid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#4fd1ff" stroke-width="1"/></pattern>
+          <radialGradient id="hudGlow"><stop offset="0" stop-color="#1b4b8f" stop-opacity=".55"/><stop offset="1" stop-color="#040a1c" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="1920" height="1080" fill="#040a1c" opacity=".9"/>
+        <rect width="1920" height="1080" fill="url(#hudGrid)" opacity=".05"/>
+        <ellipse cx="960" cy="470" rx="760" ry="460" fill="url(#hudGlow)"/>
+        <g id="hudFrame" stroke="#4fd1ff" stroke-width="3" fill="none" opacity="0">
+          <path d="M70 140V70H140M1780 70H1850V140M1850 940V1010H1780M140 1010H70V940"/>
         </g>
-        <text id="tag" x="960" y="670" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="40" fill="#e8ddff" opacity="0">Real skills. Real progress. No shortcuts.</text>
-        <g id="cta" opacity="0" transform="translate(960 800)">
-          <rect x="-330" y="-56" width="660" height="112" rx="56" fill="#ffd23f" stroke="#0b0614" stroke-width="6"/>
-          <text id="site" y="16" text-anchor="middle" font-family="Inter, sans-serif" font-weight="900" font-size="44" fill="#0b0614">yourwebsite.com</text>
+        <text id="hudTL" x="100" y="120" font-size="22" letter-spacing="4" fill="#4fd1ff" opacity="0">CERT // ADMISSION OPEN</text>
+        <text id="hudBR" x="1820" y="980" text-anchor="end" font-size="20" letter-spacing="4" fill="#4fd1ff" opacity="0">[ SYSTEM READY ]</text>
+        <g id="logoRing" opacity="0">
+          <circle cx="960" cy="250" r="150" fill="none" stroke="#4fd1ff" stroke-width="2" stroke-dasharray="6 14" opacity=".55"/>
+          <circle cx="960" cy="250" r="166" fill="none" stroke="#4fd1ff" stroke-width="1.5" stroke-dasharray="120 400" opacity=".8"/>
+        </g>
+        <image id="brand" href="cert-logo-white.png" x="850" y="145" width="220" height="213" preserveAspectRatio="xMidYMid meet" opacity="0"/>
+        <text id="enroll" x="960" y="545" text-anchor="middle" font-size="92" font-weight="800" letter-spacing="8" fill="#ffffff" opacity="0"></text>
+        <rect id="hudLine" x="760" y="590" width="400" height="2" fill="#4fd1ff" opacity="0"/>
+        <text id="tag" x="960" y="650" text-anchor="middle" font-size="30" font-weight="400" letter-spacing="2" fill="#9fb7d9" opacity="0">Real skills. Real progress. No shortcuts.</text>
+        <g id="cta" opacity="0" transform="translate(960 775)">
+          <rect x="-270" y="-44" width="540" height="88" fill="#4fd1ff" fill-opacity=".1" stroke="#4fd1ff" stroke-width="2"/>
+          <path d="M-270 -26V-44H-252M252 -44H270V-26M270 26V44H252M-252 44H-270V26" stroke="#ffffff" stroke-width="3" fill="none"/>
+          <rect id="ctaScan" x="-270" y="-44" width="60" height="88" fill="#ffffff" opacity="0"/>
+          <text id="site" y="13" text-anchor="middle" font-size="38" font-weight="700" letter-spacing="2" fill="#ffffff">cert-earth.com</text>
         </g>
       </g>
     </g>
@@ -625,18 +640,29 @@ function render(t) {
       const y = +$(id).getAttribute('y');
       set(id, 'transform', `translate(960 ${y}) scale(${lerp(from, 1, back(p))}) translate(-960 ${-y})`);
     });
-    // end card
+    // end card (tech HUD style)
     set('endcard', 'opacity', seg(t, 14.7, 15.1));
-    const e = seg(t, 15.05, 15.35);
-    set('enroll', 'opacity', clamp(e * 3));
-    const jolt = t > 15.3 && t < 15.6 ? Math.sin(t * 120) * (1 - seg(t, 15.3, 15.6)) * 8 : 0;
-    set('enroll', 'transform', `translate(${960 + jolt} 520) scale(${lerp(2.2, 1, back(e))}) translate(-960 -520)`);
-    set('brand', 'opacity', seg(t, 15.5, 15.8));
-    set('brand', 'transform', `translate(960 215) scale(${lerp(.85, 1, eout(seg(t, 15.5, 15.9)))}) translate(-960 -215)`);
-    set('tag', 'opacity', seg(t, 15.8, 16.1));
-    const c = seg(t, 16.1, 16.4);
+    set('hudFrame', 'opacity', seg(t, 14.9, 15.3) * (.75 + .25 * Math.sin(t * 4)));
+    set('hudTL', 'opacity', seg(t, 15.1, 15.4) * .8);
+    set('hudBR', 'opacity', seg(t, 16.8, 17.1) * (Math.floor(t * 2) % 2 ? .8 : .45));
+    const lg = eout(seg(t, 15.05, 15.6));
+    set('brand', 'opacity', lg);
+    set('brand', 'transform', `translate(960 250) scale(${lerp(.8, 1, lg)}) translate(-960 -250)`);
+    set('logoRing', 'opacity', lg);
+    set('logoRing', 'transform', `rotate(${t * 18} 960 250)`);
+    const HL = 'GET ENROLLED NOW';
+    const n = Math.round(HL.length * seg(t, 15.35, 16.15));
+    if (!window._hlX) { const e = $('enroll'); e.setAttribute('text-anchor', 'middle'); e.textContent = HL; window._hlX = 960 - e.getComputedTextLength() / 2; e.setAttribute('text-anchor', 'start'); e.setAttribute('x', window._hlX); }
+    $('enroll').textContent = HL.slice(0, n) + (t < 17.5 && Math.floor(t * 3) % 2 ? '_' : ' ');
+    set('enroll', 'opacity', t > 15.3 ? 1 : 0);
+    const ln = eout(seg(t, 16.15, 16.6));
+    set('hudLine', 'opacity', ln); set('hudLine', 'transform', `translate(960 0) scale(${ln} 1) translate(-960 0)`);
+    set('tag', 'opacity', seg(t, 16.35, 16.75));
+    const c = eout(seg(t, 16.6, 17.0));
     set('cta', 'opacity', c);
-    set('cta', 'transform', `translate(960 800) scale(${lerp(.6, 1, back(c)) * (1 + .03 * Math.sin(t * 6) * seg(t, 16.4, 16.8))})`);
+    set('cta', 'transform', `translate(960 ${775 + (1 - c) * 20})`);
+    const sc = seg(t, 17.1, 17.7);
+    set('ctaScan', 'opacity', sc > 0 && sc < 1 ? .25 : 0); set('ctaScan', 'x', -270 + sc * 480);
   }
 }
 window.render = render;
