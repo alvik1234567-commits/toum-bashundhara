@@ -206,6 +206,7 @@
       <rect width="1600" height="900" fill="#000"/>
       <g id="screenFx">
         <g id="game">
+          <g id="illoGame">
           <rect width="1600" height="900" fill="url(#gSky)"/>
           <circle cx="1060" cy="520" r="420" fill="url(#sunGlow)"/>
           <circle cx="1060" cy="520" r="190" fill="url(#sunG)"/>
@@ -218,6 +219,12 @@
           <g id="gDashes" fill="#ffe08a"></g>
           <g id="gPalms"></g>
           <use href="#car" x="1150" y="660" width="380" height="141" color="#ff3d6e"/>
+          </g>
+          <!-- realistic mode: photo stills (game.jpg / game-jet.jpg) -->
+          <g id="photoGame" display="none">
+            <image id="pgBase" href="game.jpg" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>
+            <image id="pgJet" href="game-jet.jpg" width="1600" height="900" preserveAspectRatio="xMidYMid slice" opacity="0"/>
+          </g>
           <!-- jet -->
           <ellipse id="jetShadow" cx="800" cy="800" rx="320" ry="26" fill="#000" opacity="0"/>
           <circle id="spawnRing" cx="800" cy="600" r="10" fill="none" stroke="#bff3ff" stroke-width="16" opacity="0"/>
@@ -320,6 +327,7 @@
     <rect width="1920" height="1080" fill="#000"/>
     <g id="outroInner">
       <g id="art">
+        <g id="illoArt">
         <rect width="1920" height="1080" fill="url(#oSky)"/>
         <circle cx="1250" cy="640" r="440" fill="url(#sunGlow)"/>
         <circle cx="1250" cy="640" r="250" fill="url(#oSun)" mask="url(#sunStripes)"/>
@@ -346,6 +354,8 @@
         </g>
         <g id="oPalms"></g>
         <use id="heroCar" href="#car" x="1000" y="720" width="760" height="282" color="#ffc23a"/>
+        </g>
+        <image id="introImg" href="intro.jpg" width="1920" height="1080" preserveAspectRatio="xMidYMid slice" display="none"/>
         <rect width="1920" height="1080" fill="url(#vignette)"/>
       </g>
       <rect width="1920" height="560" fill="url(#topShade)"/>
@@ -384,6 +394,20 @@ const CFG = {
   tag:   Q.get('tag')   || 'Real skills. Real progress. No shortcuts.',
 };
 const DURATION = 19;
+// Realistic mode: used automatically when game.jpg, game-jet.jpg and intro.jpg sit next to this file.
+let PHOTO = false;
+const loadImg = src => new Promise(r => { const i = new Image(); i.onload = () => r(true); i.onerror = () => r(false); i.src = src; });
+window.ready = Promise.all(['game.jpg', 'game-jet.jpg', 'intro.jpg'].map(loadImg)).then(ok => {
+  PHOTO = Q.get('style') !== 'illustrated' && ok.every(Boolean);
+  if (PHOTO) {
+    document.getElementById('illoGame').setAttribute('display', 'none');
+    document.getElementById('photoGame').removeAttribute('display');
+    document.getElementById('illoArt').setAttribute('display', 'none');
+    document.getElementById('introImg').removeAttribute('display');
+    ['jetWrap', 'jetShadow'].forEach(id => document.getElementById(id).setAttribute('display', 'none'));
+  }
+  return document.fonts.ready;
+});
 const NS = 'http://www.w3.org/2000/svg';
 const $ = id => document.getElementById(id);
 $('brand').textContent = CFG.brand.toUpperCase();
@@ -547,6 +571,11 @@ function render(t) {
     c.setAttribute('r', r * (1 - p)); c.setAttribute('opacity', p > 0 && p < 1 ? 1 : 0);
   });
 
+  if (PHOTO) {
+    set('pgJet', 'opacity', t >= 4.95 ? 1 : 0);
+    const push = 1 + .06 * seg(t, 0, 9.5);
+    set('photoGame', 'transform', `translate(800 500) scale(${push}) translate(-800 -500)`);
+  }
   const zp = eio(seg(t, 5.6, 9.3));
   const s = lerp(1, 2.4, zp);
   const shake = t > 4.95 && t < 5.5 ? (1 - seg(t, 4.95, 5.5)) * 7 : 0;
@@ -573,7 +602,7 @@ function render(t) {
     set('outroWhite', 'opacity', (1 - seg(t, 10.5, 10.95)) * .9);
     const kb = seg(t, 10.3, DURATION);
     set('art', 'transform', `translate(960 540) scale(${1.04 + .08 * kb}) translate(${-960 - 30 * kb} -540)`);
-    set('heroCar', 'x', 1000 - 60 * eout(seg(t, 10.3, 14.5)));
+    if (!PHOTO) set('heroCar', 'x', 1000 - 60 * eout(seg(t, 10.3, 14.5)));
     const fadeTxt = 1 - seg(t, 14.6, 14.9);
     [['t1', 11.0, 1.35], ['t2', 12.55, 1.35], ['t3', 13.4, 1.6]].forEach(([id, st, from]) => {
       const p = seg(t, st, st + .3);
@@ -613,7 +642,7 @@ else {
     if (t > DURATION + 1.5) start = now;
     requestAnimationFrame(loop);
   };
-  document.fonts.ready.then(() => requestAnimationFrame(loop));
+  window.ready.then(() => requestAnimationFrame(loop));
   $('replay').onclick = () => { start = undefined; };
 }
 </script>

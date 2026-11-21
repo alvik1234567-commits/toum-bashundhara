@@ -16,7 +16,7 @@ const stills = args.includes('--stills');
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
   await page.goto('file://' + path.join(__dirname, 'index.html') + '?' + q);
-  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(() => window.ready);
   const dur = await page.evaluate(() => window.DURATION);
 
   if (stills) {
