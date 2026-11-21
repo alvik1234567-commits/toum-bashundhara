@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Ay Reel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;700;800&family=Hind+Siliguri:wght@500;600;700&family=Inter:wght@600;800&display=block" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070615; --ink: #f5f3ff; --muted: #b9b3d6; --accent: #ff9b6a; --accent2: #ff5fa2; --hi: #ffd166;
+    --glass: rgba(255,255,255,.075); --glass2: rgba(255,255,255,.12); --line: rgba(255,255,255,.18);
+    --teal: #2dd4bf; --violet: #8b5cf6; --green: #4ade80;
+  }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  #stage { position: absolute; left: 50%; top: 50%; width: 1080px; height: 1920px; transform-origin: 0 0; overflow: hidden;
+    background: radial-gradient(120% 80% at 50% 0%, #1a1240 0%, var(--bg) 60%); color: var(--ink);
+    font-family: 'Hind Siliguri', 'Anek Bangla', system-ui, sans-serif; }
+  .abs { position: absolute; }
+  .blob { position: absolute; width: 900px; height: 900px; border-radius: 50%; filter: blur(110px); opacity: .55; will-change: transform; }
+  .glass { background: linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
+    border: 1.5px solid var(--line); border-radius: 44px;
+    backdrop-filter: blur(28px) saturate(140%); -webkit-backdrop-filter: blur(28px) saturate(140%);
+    box-shadow: 0 30px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(255,255,255,.06); }
+  .scene { position: absolute; left: 70px; top: 400px; width: 940px; height: 960px; visibility: hidden; will-change: transform, opacity; }
+  .disp { font-family: 'Anek Bangla', 'Hind Siliguri', sans-serif; font-weight: 800; letter-spacing: -.5px; }
+  .grad { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .chip { display: inline-flex; align-items: center; gap: 14px; padding: 16px 28px; border-radius: 999px; font-weight: 600; font-size: 36px; }
+  .num { font-family: 'Anek Bangla', sans-serif; font-weight: 800; font-size: 210px; line-height: 1; color: transparent; -webkit-text-stroke: 3px rgba(255,255,255,.55); }
+  .ico { width: 120px; height: 120px; border-radius: 34px; display: grid; place-items: center; }
+  .ico svg { width: 66px; height: 66px; }
+  .title { font-size: 74px; line-height: 1.15; }
+  .sub { font-size: 38px; color: var(--muted); font-weight: 600; }
+  .bar { height: 18px; border-radius: 9px; background: rgba(255,255,255,.22); }
+  #cap { position: absolute; left: 60px; width: 960px; top: 1405px; min-height: 150px; display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 22px 34px; box-sizing: border-box; font-family: 'Anek Bangla', sans-serif; font-weight: 700; font-size: 52px; line-height: 1.25; border-radius: 36px; }
+  #cap .w { opacity: .5; transition: none; }
+  #cap .w.on { opacity: 1; color: var(--hi); }
+  #cap .w.done { opacity: 1; }
+  #ui { position: fixed; left: 16px; bottom: 16px; z-index: 9; }
+  #ui button { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 8px 16px; font: 600 14px Inter, sans-serif; cursor: pointer; }
+  body.record #ui { display: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- background -->
+  <div class="blob" id="b1" style="background:#6d28d9;left:-300px;top:-200px"></div>
+  <div class="blob" id="b2" style="background:#0ea5a4;left:500px;top:500px"></div>
+  <div class="blob" id="b3" style="background:#d97757;left:-200px;top:1100px"></div>
+  <div class="blob" id="b4" style="background:#2563eb;left:400px;top:-300px;opacity:.35"></div>
+  <svg class="abs" width="1080" height="1920" style="left:0;top:0;opacity:.07">
+    <defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#fff" stroke-width="1"/></pattern></defs>
+    <rect width="1080" height="1920" fill="url(#grid)"/>
+  </svg>
+  <div id="particles"></div>
+
+  <!-- persistent header -->
+  <div id="brand" class="abs glass" style="left:50%;top:150px;transform:translateX(-50%);padding:18px 34px;border-radius:999px;display:flex;align-items:center;gap:16px">
+    <svg width="46" height="46" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="url(#cg)"/><defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb36b"/><stop offset="1" stop-color="#ff5fa2"/></linearGradient></defs><path d="M12 5.5l1.7 4.3 4.3 1.7-4.3 1.7L12 17.5l-1.7-4.3L6 11.5l4.3-1.7z" fill="#fff"/></svg>
+    <span class="disp" id="brandName" style="font-size:42px">স্মার্ট আয়</span>
+  </div>
+  <div id="steps" class="abs" style="left:0;width:1080px;top:270px;display:flex;justify-content:center;gap:14px"></div>
+
+  <!-- ===== SCENE: hook 1 (timer) ===== -->
+  <div class="scene" id="sHook1">
+    <div class="glass" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px">
+      <svg width="420" height="420" viewBox="0 0 420 420">
+        <circle cx="210" cy="210" r="180" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="26"/>
+        <circle id="ring" cx="210" cy="210" r="180" fill="none" stroke="url(#rg)" stroke-width="26" stroke-linecap="round" transform="rotate(-90 210 210)" stroke-dasharray="1131" stroke-dashoffset="1131"/>
+        <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd166"/><stop offset=".5" stop-color="#ff9b6a"/><stop offset="1" stop-color="#ff5fa2"/></linearGradient></defs>
+        <text x="210" y="238" text-anchor="middle" font-family="Anek Bangla" font-weight="800" font-size="110" fill="#fff" id="clock">১:০০</text>
+      </svg>
+      <div class="disp" style="font-size:96px;text-align:center;line-height:1.1">আমাকে <span class="grad">১ মিনিট</span> দিন</div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE: hook 2 (5 ways) ===== -->
+  <div class="scene" id="sHook2">
+    <div class="glass" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+      <div class="sub" style="font-size:46px;color:#e9e4ff">একদম <b style="color:var(--hi)">ফ্রি</b> Claude দিয়ে আয়ের</div>
+      <div class="disp" id="five" style="font-size:250px;line-height:1.1;margin:40px 0 0"><span class="grad">৫টি</span></div>
+      <div class="disp" style="font-size:110px;margin-top:-20px">উপায়</div>
+      <div id="hookChips" style="display:flex;gap:22px;margin-top:60px"></div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE: bridge (Claude = tool) ===== -->
+  <div class="scene" id="sBridge">
+    <div class="glass" style="position:absolute;inset:0;padding:60px;box-sizing:border-box">
+      <div class="disp" style="font-size:84px;text-align:center">Claude = আপনার <span class="grad">টুল</span></div>
+      <div class="glass" style="margin-top:50px;padding:40px;border-radius:36px;background:rgba(10,8,30,.35)">
+        <div id="msgUser" style="margin-left:auto;width:fit-content;max-width:620px;padding:22px 30px;border-radius:30px 30px 8px 30px;background:linear-gradient(135deg,#7c3aed,#db2777);font-size:38px;font-weight:600">
+          <span id="userTyped"></span><span id="caret1" style="opacity:.8">|</span>
+        </div>
+        <div style="display:flex;gap:20px;margin-top:34px;align-items:flex-start">
+          <div class="ico" style="width:84px;height:84px;border-radius:26px;background:linear-gradient(135deg,#ff9b6a,#d97757);flex:none"><svg viewBox="0 0 24 24" style="width:48px;height:48px"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z" fill="#fff"/></svg></div>
+          <div id="msgBot" style="flex:1;padding:26px 30px;border-radius:8px 30px 30px 30px;background:rgba(255,255,255,.1);border:1px solid var(--line)">
+            <div id="dots" style="font-size:50px;letter-spacing:8px;line-height:.8">•••</div>
+            <div id="botLines"></div>
+          </div>
+        </div>
+      </div>
+      <div id="go" class="chip disp" style="position:absolute;left:50%;bottom:70px;transform:translateX(-50%);font-size:56px;padding:24px 56px;background:linear-gradient(90deg,#ffb36b,#ff5fa2);color:#1a0b1f">চলুন শুরু করি! →</div>
+    </div>
+  </div>
+
+  <div id="points"></div>
+
+  <!-- ===== SCENE: reminder ===== -->
+  <div class="scene" id="sRemind">
+    <div class="glass" style="position:absolute;inset:0;padding:70px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;text-align:center">
+      <div class="ico" style="width:190px;height:190px;border-radius:60px;background:linear-gradient(135deg,rgba(74,222,128,.35),rgba(45,212,191,.2));border:1.5px solid rgba(74,222,128,.6)">
+        <svg viewBox="0 0 24 24" style="width:110px;height:110px"><path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5z" fill="none" stroke="#4ade80" stroke-width="1.6"/><path id="shieldCheck" d="M8 12l3 3 5-6" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="14" stroke-dashoffset="14"/></svg>
+      </div>
+      <div class="sub" style="margin-top:40px;font-size:44px;color:var(--hi)">মনে রাখবেন</div>
+      <div class="disp" style="font-size:80px;line-height:1.15;margin-top:10px">AI-এর কাজ সবসময় <span class="grad">নিজে চেক</span> করুন</div>
+      <div id="checks" style="margin-top:60px;display:flex;flex-direction:column;gap:22px;align-items:flex-start"></div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE: CTA ===== -->
+  <div class="scene" id="sCta">
+    <div class="glass" style="position:absolute;inset:0;padding:64px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;text-align:center">
+      <div class="sub" style="font-size:46px;color:#e9e4ff">বিস্তারিত জানতে চান?</div>
+      <div class="disp" style="font-size:96px;margin-top:6px">কমেন্টে লিখুন</div>
+      <div id="cbox" class="glass" style="margin-top:44px;width:780px;height:150px;border-radius:999px;display:flex;align-items:center;padding:0 20px 0 50px;box-sizing:border-box;background:rgba(10,8,30,.4)">
+        <div class="disp" style="font-size:80px;flex:1;text-align:left"><span id="cTyped" class="grad"></span><span id="caret2" style="color:#fff;font-weight:500">|</span></div>
+        <div id="send" class="ico" style="width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#ffb36b,#ff5fa2)"><svg viewBox="0 0 24 24" style="width:54px;height:54px"><path d="M3 11l18-8-8 18-2-8z" fill="#1a0b1f"/></svg></div>
+      </div>
+      <div id="hearts" style="position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none"></div>
+      <div id="follow" class="glass" style="margin-top:70px;width:780px;padding:34px 40px;box-sizing:border-box;border-radius:40px;display:flex;align-items:center;gap:30px">
+        <div style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#ffb36b,#ff5fa2);display:grid;place-items:center;flex:none"><svg viewBox="0 0 24 24" style="width:70px;height:70px"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z" fill="#fff"/></svg></div>
+        <div style="flex:1;text-align:left;white-space:nowrap;min-width:0"><div class="disp" id="ctaName" style="font-size:52px">স্মার্ট আয়</div><div class="sub" style="font-size:32px">AI দিয়ে আয়ের টিপস</div></div>
+        <div id="followBtn" class="chip disp" style="font-size:42px;padding:22px 36px;background:#fff;color:#1a0b1f;white-space:nowrap;flex:none">ফলো করুন</div>
+      </div>
+      <div id="ripple" style="position:absolute;width:40px;height:40px;border-radius:50%;border:5px solid #fff;opacity:0"></div>
+    </div>
+  </div>
+
+  <!-- captions + disclaimer -->
+  <div id="cap" class="glass"></div>
+  <div class="abs" style="left:0;width:1080px;top:1590px;text-align:center;font-size:26px;color:rgba(233,228,255,.6);font-weight:500">এটি আর্থিক পরামর্শ নয় · আয় নির্ভর করে আপনার দক্ষতা ও পরিশ্রমের উপর</div>
+  <div id="flash" class="abs" style="inset:0;background:#fff;opacity:0;pointer-events:none"></div>
+</div>
+<div id="ui"><button id="replay">Replay</button></div>
+
+<script>
+const Q = new URLSearchParams(location.search);
+const PAGE = Q.get('page') || 'স্মার্ট আয়';
+const DURATION = 59.2;
+const $ = id => document.getElementById(id);
+$('brandName').textContent = PAGE; $('ctaName').textContent = PAGE;
+
+// ---------------- helpers ----------------
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, p) => a + (b - a) * p;
+const eOut = x => 1 - Math.pow(1 - x, 4);
+const eIn = x => x * x * x;
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c1 = 1.6, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const BN = n => String(n).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+function el(tag, css, html, parent) { const e = document.createElement(tag); if (css) e.style.cssText = css; if (html != null) e.innerHTML = html; if (parent) parent.appendChild(e); return e; }
+// scene in/out: slide up + scale + blur in, scale down + blur out
+function scene(e, t, a, b, o = {}) {
+  const pi = eOut(seg(t, a, a + (o.inD || .7))), po = eIn(seg(t, b, b + (o.outD || .4)));
+  const op = pi * (1 - po);
+  e.style.visibility = op < .002 ? 'hidden' : 'visible';
+  if (op < .002) return;
+  const y = (1 - pi) * 140 - po * 90, s = lerp(.9, 1, pi) * lerp(1, .94, po);
+  e.style.opacity = op;
+  e.style.transform = `translateY(${y}px) scale(${s})`;
+  const bl = (1 - pi) * 18 + po * 14;
+  e.style.filter = bl > .4 ? `blur(${bl}px)` : 'none';
+}
+// element pop in at time a
+function pop(e, t, a, o = {}) {
+  const p = seg(t, a, a + (o.d || .5));
+  const op = clamp(p * 3) * (o.until != null ? 1 - seg(t, o.until, o.until + .3) : 1);
+  e.style.opacity = op;
+  const dx = (o.dx || 0) * (1 - eOut(p)), dy = (o.dy != null ? o.dy : 40) * (1 - eOut(p));
+  e.style.transform = `${o.base || ''} translate(${dx}px,${dy}px) scale(${lerp(o.s0 != null ? o.s0 : .7, 1, back(p))})`;
+}
+
+// ---------------- icons ----------------
+const IC = {
+  video: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"><rect x="2.5" y="5" width="14" height="14" rx="3"/><path d="M16.5 10l5-3v10l-5-3z"/></svg>',
+  ad: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"><path d="M3 10v4h3l7 4V6L6 10z"/><path d="M16.5 9a4 4 0 010 6M19 6.5a7.5 7.5 0 010 11"/></svg>',
+  web: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="16" rx="3"/><path d="M2.5 8.5h19M9 13l-2 2 2 2M15 13l2 2-2 2"/></svg>',
+  pen: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/></svg>',
+  cv: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.5" width="16" height="19" rx="3"/><circle cx="12" cy="9" r="2.5"/><path d="M8 15.5h8M9 18.5h6"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4.5 4.5L19 7"/></svg>',
+  heart: '<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.3-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.7-8 11-8 11z" fill="#ff5fa2"/></svg>',
+  like: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#2563eb"/><path d="M7 11h2.5v7H7zM10.5 18v-7l3-4.5c.8 0 1.5.7 1.3 1.5L14.3 11H18a1 1 0 011 1.2l-1 5a1 1 0 01-1 .8z" fill="#fff"/></svg>',
+};
+const COLORS = ['#8b5cf6', '#ec4899', '#06b6d4', '#f59e0b', '#22c55e'];
+
+// ---------------- background particles ----------------
+let sd = 9; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+const parts = Array.from({ length: 34 }, () => ({ e: el('div', `position:absolute;border-radius:50%;background:#fff;width:${3 + rnd() * 6}px;height:${3 + rnd() * 6}px`, null, $('particles')), x: rnd() * 1080, y: rnd() * 1920, v: 12 + rnd() * 40, o: .15 + rnd() * .45, ph: rnd() * 6 }));
+
+// ---------------- step chips ----------------
+const steps = [1, 2, 3, 4, 5].map(i => el('div', 'width:84px;height:16px;border-radius:8px;background:rgba(255,255,255,.18);overflow:hidden', '<div style="height:100%;width:0;background:linear-gradient(90deg,#ffb36b,#ff5fa2)"></div>', $('steps')));
+
+// ---------------- hook chips ----------------
+const hookChips = ['video', 'ad', 'web', 'pen', 'cv'].map((k, i) => el('div', `width:120px;height:120px;border-radius:36px;display:grid;place-items:center;background:${COLORS[i]}33;border:1.5px solid ${COLORS[i]}aa;opacity:0`, IC[k].replace('<svg', '<svg style="width:62px;height:62px"'), $('hookChips')));
+
+// ---------------- timeline (from the voiceover's pauses) ----------------
+const T = {
+  hook1: [0, 2.82], hook2: [2.88, 5.78], bridge: [5.82, 10.75],
+  p: [ // scene in, number, title, body, out
+    { a: 10.85, num: 11.07, title: 11.80, body: 13.08, b: 19.55 },
+    { a: 19.7, num: 19.94, title: 20.55, body: 22.58, b: 27.95 },
+    { a: 28.1, num: 28.39, title: 29.17, body: 29.99, b: 34.6 },
+    { a: 34.75, num: 35.01, title: 35.87, body: 37.98, b: 42.15 },
+    { a: 42.3, num: 42.51, title: 43.14, body: 44.77, b: 47.95 },
+  ],
+  remind: [48.1, 51.62], cta: [51.7, 99],
+};
+const CAPS = [
+  ['আমাকে মাত্র এক মিনিট দিন...', 0.05, 2.71], ['আমি আপনাকে বলবো, একদম ফ্রি ক্লড দিয়ে আয় করার পাঁচটি উপায়।', 2.93, 5.84],
+  ['শুধু ক্লডকে একটা টুল হিসেবে ব্যবহার করতে জানতে হবে।', 5.86, 8.88], ['চলুন শুরু করি!', 9.49, 10.31],
+  ['এক...', 11.07, 11.35], ['ভিডিও এডিটিং।', 11.80, 12.42],
+  ['ক্লড দিয়ে ভিডিওর স্ক্রিপ্ট, সাবটাইটেল আর আইডিয়া বানান, তারপর ক্যাপকাটে এডিট করে ইউটিউবার আর পেজগুলোকে সার্ভিস দিন।', 13.08, 19.05],
+  ['দুই... সোশ্যাল মিডিয়ার ছোট বিজ্ঞাপন।', 19.94, 21.97],
+  ['লোকাল দোকান আর ছোট ব্যবসার জন্য ফেসবুক বিজ্ঞাপনের লেখা, ক্যাপশন আর আইডিয়া তৈরি করে দিন।', 22.58, 27.50],
+  ['তিন...', 28.39, 28.76], ['ওয়েবসাইট তৈরি।', 29.17, 29.76],
+  ['ক্লডকে বলুন কোড লিখে দিতে, আর ছোট ব্যবসার জন্য সহজ ওয়েবসাইট বানিয়ে দিন।', 29.99, 34.20],
+  ['চার...', 35.01, 35.39], ['ফ্রিল্যান্স লেখা আর অনুবাদ।', 35.87, 37.47],
+  ['ব্লগ, আর্টিকেল আর বাংলা-ইংরেজি অনুবাদের কাজ ফাইভার বা আপওয়ার্কে নিন।', 37.98, 41.68],
+  ['পাঁচ...', 42.51, 42.78], ['সিভি আর কভার লেটার।', 43.14, 44.40],
+  ['চাকরিপ্রার্থীদের জন্য সুন্দর করে সাজিয়ে দেওয়ার সার্ভিস দিন।', 44.77, 47.54],
+  ['মনে রাখবেন... এআই-এর কাজ সবসময় নিজে চেক করুন।', 48.36, 51.39],
+  ['কোনটা নিয়ে বিস্তারিত জানতে চান?', 51.88, 53.19], ['কমেন্টে লিখুন "ক্লড"...', 53.47, 54.46],
+  ['আর এমন আরও টিপসের জন্য, স্মার্ট আয় পেজটি ফলো করুন!', 54.83, 57.54],
+];
+// split captions into short chunks (max ~4 words), timed by character length
+const CHUNKS = [];
+CAPS.forEach(([txt, a, b]) => {
+  const words = txt.split(' ');
+  const groups = []; let g = [];
+  words.forEach(w => { g.push(w); if (g.length >= 4 || (g.join(' ').length > 22 && g.length >= 2)) { groups.push(g); g = []; } });
+  if (g.length) { if (g.length === 1 && groups.length) groups[groups.length - 1].push(...g); else groups.push(g); }
+  const total = words.join('').length; let acc = a;
+  groups.forEach(gr => {
+    const len = gr.join('').length, d = (b - a) * len / total;
+    const wt = []; let wa = acc; gr.forEach(w => { const wd = d * w.length / len; wt.push([wa, wa + wd]); wa += wd; });
+    CHUNKS.push({ words: gr, a: acc, b: acc + d, wt }); acc += d;
+  });
+});
+CHUNKS.forEach((c, i) => { const n = CHUNKS[i + 1]; c.hold = n ? Math.min(n.a, c.b + .6) : c.b + .8; });
+let curChunk = -1, wordEls = [];
+
+// ---------------- point scenes ----------------
+const POINTS = [
+  { icon: 'video', title: 'ভিডিও এডিটিং', chips: ['স্ক্রিপ্ট', 'সাবটাইটেল', 'আইডিয়া'], note: 'এডিট করুন CapCut-এ', mock: 'video' },
+  { icon: 'ad', title: 'সোশ্যাল মিডিয়ার ছোট বিজ্ঞাপন', chips: ['অ্যাডের লেখা', 'ক্যাপশন', 'আইডিয়া'], note: 'লোকাল দোকান ও ছোট ব্যবসা', mock: 'ad' },
+  { icon: 'web', title: 'ওয়েবসাইট তৈরি', chips: ['Claude কোড লেখে', 'আপনি সাইট বানান'], note: 'ছোট ব্যবসার সহজ ওয়েবসাইট', mock: 'web' },
+  { icon: 'pen', title: 'লেখা ও অনুবাদ', chips: ['ব্লগ', 'আর্টিকেল', 'বাংলা ⇄ English'], note: 'Fiverr · Upwork', mock: 'doc' },
+  { icon: 'cv', title: 'CV ও কভার লেটার', chips: ['চাকরিপ্রার্থীদের জন্য', 'সার্ভিস'], note: 'সুন্দর করে সাজিয়ে দিন', mock: 'cv' },
+];
+const MOCK = {
+  video: () => `<div style="display:flex;gap:24px;height:100%">
+      <div style="flex:1.1;border-radius:26px;background:linear-gradient(135deg,#312e81,#831843);position:relative;overflow:hidden">
+        <div style="position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center"><svg viewBox="0 0 24 24" style="width:44px"><path d="M8 5v14l11-7z" fill="#1a0b1f"/></svg></div>
+        <div data-k="sub" style="position:absolute;left:24px;right:24px;bottom:22px;padding:10px 14px;border-radius:12px;background:rgba(0,0,0,.6);font-size:28px;text-align:center;font-weight:600">সাবটাইটেল ✓</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;justify-content:center;position:relative">
+        ${[0, 1, 2].map(r => `<div style="height:56px;border-radius:14px;background:rgba(255,255,255,.08);position:relative;overflow:hidden">${[0, 1, 2].map(c => `<div data-k="clip" style="position:absolute;top:8px;bottom:8px;left:${8 + c * 34 + r * 6}%;width:${22 + ((r + c) % 2) * 8}%;border-radius:10px;background:${COLORS[(r + c) % 5]}"></div>`).join('')}</div>`).join('')}
+        <div data-k="head" style="position:absolute;top:30px;bottom:30px;width:4px;background:#ffd166;border-radius:2px;left:0"></div>
+      </div></div>`,
+  ad: () => `<div style="height:100%;border-radius:26px;background:rgba(255,255,255,.95);color:#111;padding:20px 24px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:16px"><div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ec4899)"></div><div><div style="font-weight:700;font-size:30px">লোকাল দোকান</div><div style="font-size:22px;color:#666">Sponsored · 🌐</div></div></div>
+      <div data-k="adtext" style="font-size:26px;font-weight:600;line-height:1.3;height:34px;white-space:nowrap;overflow:hidden"></div>
+      <div style="flex:1;border-radius:18px;background:linear-gradient(135deg,#fde68a,#f472b6,#8b5cf6);display:grid;place-items:center;font-family:'Anek Bangla';font-weight:800;font-size:52px;color:#fff;text-shadow:0 4px 20px rgba(0,0,0,.25)">নতুন কালেকশন</div>
+      <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;color:#666">আজই দেখুন</div><div data-k="btn" style="padding:12px 26px;border-radius:12px;background:#1877f2;color:#fff;font-weight:700;font-size:26px">এখনই কিনুন</div></div></div>`,
+  web: () => `<div style="height:100%;border-radius:26px;background:rgba(10,8,30,.55);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column">
+      <div style="height:54px;display:flex;align-items:center;gap:10px;padding:0 20px;background:rgba(255,255,255,.08)"><i style="width:16px;height:16px;border-radius:50%;background:#ff5f57"></i><i style="width:16px;height:16px;border-radius:50%;background:#febc2e"></i><i style="width:16px;height:16px;border-radius:50%;background:#28c840"></i><div style="margin-left:16px;flex:1;height:30px;border-radius:15px;background:rgba(255,255,255,.12);font:600 20px Inter;color:#cfc8ee;display:flex;align-items:center;padding-left:16px">yourshop.com</div></div>
+      <div style="flex:1;display:flex">
+        <div style="flex:1;padding:22px;display:flex;flex-direction:column;gap:12px;font:600 20px monospace">${['#c084fc 60%', '#38bdf8 80%', '#4ade80 45%', '#f472b6 70%', '#facc15 55%', '#38bdf8 75%', '#c084fc 40%'].map(s => { const [c, w] = s.split(' '); return `<div data-k="code" style="height:16px;border-radius:8px;background:${c};width:0;max-width:${w};opacity:.85"></div>`; }).join('')}</div>
+        <div style="flex:1.2;padding:18px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.92)">
+          <div data-k="blk" style="height:40px;border-radius:10px;background:#111827"></div>
+          <div data-k="blk" style="flex:1;border-radius:14px;background:linear-gradient(135deg,#a78bfa,#f472b6)"></div>
+          <div data-k="blk" style="display:flex;gap:10px"><div style="flex:1;height:70px;border-radius:12px;background:#e5e7eb"></div><div style="flex:1;height:70px;border-radius:12px;background:#e5e7eb"></div><div style="flex:1;height:70px;border-radius:12px;background:#e5e7eb"></div></div>
+          <div data-k="blk" style="align-self:center;padding:10px 30px;border-radius:999px;background:#7c3aed;color:#fff;font-weight:700;font-size:22px">অর্ডার করুন</div>
+        </div></div></div>`,
+  doc: () => `<div style="display:flex;gap:24px;height:100%">
+      <div style="flex:1;border-radius:26px;background:rgba(255,255,255,.93);padding:30px;display:flex;flex-direction:column;gap:16px;color:#222">
+        <div style="font-family:'Anek Bangla';font-weight:800;font-size:34px">ব্লগ আর্টিকেল</div>
+        ${[92, 100, 84, 96, 70, 88, 60].map(w => `<div data-k="line" style="height:14px;border-radius:7px;background:#c7c2e6;width:0;max-width:${w}%"></div>`).join('')}
+      </div>
+      <div style="width:300px;display:flex;flex-direction:column;gap:20px;justify-content:center">
+        <div class="glass" style="border-radius:28px;padding:22px;text-align:center"><div data-k="lang" class="disp" style="font-size:40px">বাংলা</div><div style="font-size:44px;opacity:.8">⇅</div><div data-k="lang2" style="font:800 38px Inter">English</div></div>
+        <div style="padding:14px;border-radius:18px;background:#1dbf73;text-align:center;font:800 30px Inter">fiverr.</div>
+        <div style="padding:14px;border-radius:18px;background:#14a800;text-align:center;font:800 30px Inter">Upwork</div>
+      </div></div>`,
+  cv: () => `<div style="display:flex;justify-content:center;height:100%">
+      <div style="width:560px;border-radius:26px;background:rgba(255,255,255,.95);padding:26px 32px;box-sizing:border-box;color:#222;position:relative;display:flex;flex-direction:column;gap:11px">
+        <div style="display:flex;gap:22px;align-items:center;flex:none"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#38bdf8)"></div><div style="flex:1"><div style="height:22px;width:70%;border-radius:11px;background:#312e81"></div><div style="height:14px;width:45%;border-radius:7px;background:#a5b4fc;margin-top:12px"></div></div></div>
+        ${['অভিজ্ঞতা', 'দক্ষতা'].map(h => `<div style="flex:none;font-family:'Anek Bangla';font-weight:800;font-size:26px;line-height:1.2;color:#7c3aed;margin-top:4px">${h}</div>${[95, 78].map(w => `<div data-k="line" style="flex:none;height:12px;border-radius:6px;background:#b3acd9;width:0;max-width:${w}%"></div>`).join('')}`).join('')}
+        <div data-k="stamp" style="position:absolute;right:-30px;bottom:-30px;width:150px;height:150px;border-radius:50%;background:#22c55e;display:grid;place-items:center;box-shadow:0 10px 30px rgba(34,197,94,.5)">${IC.check.replace('stroke="#4ade80"', 'stroke="#fff"').replace('<svg', '<svg style="width:90px;height:90px"')}</div>
+      </div></div>`,
+};
+const pointEls = POINTS.map((P, i) => {
+  const s = el('div', '', null, $('points')); s.className = 'scene';
+  const g = el('div', 'position:absolute;inset:0;padding:54px 56px;box-sizing:border-box', null, s); g.className = 'glass';
+  const head = el('div', 'display:flex;align-items:center;gap:30px', null, g);
+  const num = el('div', 'opacity:0', BN('0' + (i + 1)), head); num.className = 'num';
+  const ico = el('div', `background:${COLORS[i]}40;border:1.5px solid ${COLORS[i]};opacity:0`, IC[P.icon], head); ico.className = 'ico';
+  const title = el('div', `margin-top:10px;opacity:0;${P.title.length > 16 ? 'font-size:60px' : ''}`, P.title, g); title.className = 'disp title';
+  const chips = el('div', 'display:flex;flex-wrap:wrap;gap:16px;margin-top:28px', null, g);
+  const chipEls = P.chips.map(c => { const e = el('div', `background:${COLORS[i]}2e;border:1.5px solid ${COLORS[i]}99;opacity:0`, c, chips); e.className = 'chip'; return e; });
+  const mock = el('div', 'position:absolute;left:56px;right:56px;bottom:110px;height:330px;opacity:0;border-radius:26px', MOCK[P.mock](), g);
+  const note = el('div', 'position:absolute;left:56px;right:56px;bottom:40px;text-align:center;opacity:0', P.note, g); note.className = 'sub';
+  return { s, num, ico, title, chipEls, mock, note, q: k => [...mock.querySelectorAll(`[data-k="${k}"]`)] };
+});
+
+// reminder checks / bridge text / hearts
+const checkEls = ['তথ্য ঠিক আছে?', 'ভাষা স্বাভাবিক?', 'ক্লায়েন্টের চাহিদা মিলেছে?'].map(c => el('div', 'display:flex;align-items:center;gap:20px;font-size:44px;font-weight:600;opacity:0', `<span class="ico" style="width:64px;height:64px;border-radius:20px;background:rgba(74,222,128,.15)">${IC.check.replace('<svg', '<svg style="width:40px;height:40px"')}</span>${c}`, $('checks')));
+const USER_MSG = 'একটা ফেসবুক পোস্ট লিখে দাও';
+const BOT = [['#c4b5fd', 92], ['#c4b5fd', 78], ['#c4b5fd', 86], ['#a5f3fc', 54]].map(([c, w]) => el('div', `height:20px;border-radius:10px;background:${c};opacity:.85;margin:14px 0;width:0;max-width:${w}%`, null, $('botLines')));
+const hsh = (i, k) => { const v = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return v - Math.floor(v); };
+const hearts = Array.from({ length: 14 }, (_, i) => ({ e: el('div', 'position:absolute;left:0;top:0;width:70px;height:70px;opacity:0', i % 3 ? IC.heart : IC.like, $('hearts')), x: 560 + hsh(i, 1) * 280, d: hsh(i, 2) * 1.4, s: .7 + hsh(i, 3) * .7, w: (hsh(i, 4) - .5) * 160 }));
+const AD_TEXT = 'নতুন কালেকশন এসে গেছে! আজই ভিজিট করুন';
+
+function typeText(str, p) { const chars = [...str]; return chars.slice(0, Math.round(chars.length * clamp(p))).join(''); }
+
+// ---------------- render ----------------
+function render(t) {
+  // background drift
+  [['b1', 220, 160, .11, 0], ['b2', 260, 200, .09, 2], ['b3', 200, 240, .13, 4], ['b4', 240, 140, .07, 1]].forEach(([id, ax, ay, f, ph]) => {
+    $(id).style.transform = `translate(${Math.sin(t * f * 2 + ph) * ax}px, ${Math.cos(t * f * 1.6 + ph) * ay}px)`;
+  });
+  parts.forEach(p => { const y = ((p.y - t * p.v) % 1920 + 1920) % 1920; p.e.style.transform = `translate(${p.x + Math.sin(t * .5 + p.ph) * 20}px, ${y}px)`; p.e.style.opacity = p.o * (.6 + .4 * Math.sin(t * 2 + p.ph)); });
+
+  // header
+  pop($('brand'), t, .1, { base: 'translateX(-50%)', dy: -40, s0: .8 });
+  steps.forEach((s, i) => {
+    const P = T.p[i];
+    const fill = t < P.a ? 0 : t < P.b ? 1 * eOut(seg(t, P.a, P.a + .5)) : 1;
+    s.firstChild.style.width = (fill * 100) + '%';
+    s.style.opacity = seg(t, 10.3, 10.9) * (1 - seg(t, 48, 48.4)) * (i <= T.p.findIndex(q => t < q.b) || t > P.a ? 1 : .6);
+    s.style.transform = `scaleY(${t > P.a && t < P.b ? 1.25 : 1})`;
+  });
+
+  // hook 1: timer
+  scene($('sHook1'), t, 0, T.hook1[1], { inD: .5 });
+  const rp = eio(seg(t, .15, 2.7));
+  $('ring').setAttribute('stroke-dashoffset', 1131 * (1 - rp));
+  $('clock').textContent = '০:' + BN(String(Math.max(0, 60 - Math.floor(rp * 60))).padStart(2, '0')).replace('০:৬০', '১:০০');
+  if (rp === 0) $('clock').textContent = '১:০০';
+  // hook 2
+  scene($('sHook2'), t, T.hook2[0], T.hook2[1]);
+  const f = seg(t, 3.1, 3.7); $('five').style.transform = `scale(${lerp(.4, 1, back(f))})`;
+  hookChips.forEach((c, i) => pop(c, t, 3.9 + i * .22, { dy: 60 }));
+  // bridge
+  scene($('sBridge'), t, T.bridge[0], T.bridge[1]);
+  $('userTyped').textContent = typeText(USER_MSG, seg(t, 6.2, 7.4));
+  $('caret1').style.opacity = t < 7.5 && Math.floor(t * 3) % 2 ? .9 : 0;
+  pop($('msgUser'), t, 6.0, { dy: 30, s0: .9 });
+  $('dots').style.display = t > 7.5 && t < 8.1 ? 'block' : 'none';
+  $('dots').style.opacity = .4 + .6 * Math.abs(Math.sin(t * 6));
+  pop($('msgBot'), t, 7.45, { dy: 30, s0: .9 });
+  BOT.forEach((b, i) => { b.style.width = (eOut(seg(t, 8.1 + i * .2, 8.7 + i * .2)) * 100) + '%'; });
+  pop($('go'), t, 9.45, { base: 'translateX(-50%)', dy: 60, s0: .5, d: .6 });
+  if (t > 10) $('go').style.transform = `translateX(-50%) scale(${1 + .04 * Math.sin((t - 10) * 9)})`;
+
+  // points
+  pointEls.forEach((E, i) => {
+    const P = T.p[i];
+    scene(E.s, t, P.a, P.b);
+    if (t < P.a - .1 || t > P.b + .5) return;
+    pop(E.num, t, P.num, { dx: -60, dy: 0, s0: .6 });
+    pop(E.ico, t, P.num + .15, { dy: 0, s0: .3 });
+    pop(E.title, t, P.title - .05, { dy: 50, s0: .92 });
+    E.chipEls.forEach((c, k) => pop(c, t, P.title + .35 + k * .18, { dy: 30 }));
+    pop(E.mock, t, P.body - .1, { dy: 80, s0: .94, d: .7 });
+    pop(E.note, t, P.body + 1.2, { dy: 20, s0: 1 });
+    const bp = seg(t, P.body, P.b - .3);      // progress through the spoken body
+    if (i === 0) {
+      E.q('clip').forEach((c, k) => { c.style.transform = `scaleX(${eOut(seg(t, P.body + k * .12, P.body + .6 + k * .12))})`; c.style.transformOrigin = 'left'; });
+      E.q('head').forEach(h => h.style.left = (bp * 96) + '%');
+      E.q('sub').forEach(s => pop(s, t, P.body + 2.2, { dy: 20 }));
+    } else if (i === 1) {
+      E.q('adtext').forEach(a => a.textContent = typeText(AD_TEXT, seg(t, P.body + .4, P.body + 2.6)));
+      E.q('btn').forEach(b => b.style.transform = `scale(${1 + .06 * Math.max(0, Math.sin((t - P.body - 3) * 6)) * seg(t, P.body + 3, P.body + 3.2)})`);
+    } else if (i === 2) {
+      E.q('code').forEach((c, k) => c.style.width = (eOut(seg(t, P.body + k * .25, P.body + .5 + k * .25)) * 100) + '%');
+      E.q('blk').forEach((c, k) => { const p = eOut(seg(t, P.body + 1.4 + k * .45, P.body + 1.9 + k * .45)); c.style.opacity = p; c.style.transform = `translateY(${(1 - p) * 20}px)`; });
+    } else if (i === 3) {
+      E.q('line').forEach((c, k) => c.style.width = (eOut(seg(t, P.body + k * .3, P.body + .5 + k * .3)) * 100) + '%');
+      const sw = Math.floor(seg(t, P.body + .8, P.b) * 4) % 2;
+      E.q('lang').forEach(l => l.style.opacity = sw ? .55 : 1); E.q('lang2').forEach(l => l.style.opacity = sw ? 1 : .55);
+    } else if (i === 4) {
+      E.q('line').forEach((c, k) => c.style.width = (eOut(seg(t, P.body + k * .22, P.body + .45 + k * .22)) * 100) + '%');
+      E.q('stamp').forEach(s => pop(s, t, P.body + 1.8, { dy: 0, s0: .2, d: .45 }));
+    }
+  });
+
+  // reminder
+  scene($('sRemind'), t, T.remind[0], T.remind[1]);
+  $('shieldCheck').setAttribute('stroke-dashoffset', 14 * (1 - eOut(seg(t, 48.6, 49.2))));
+  checkEls.forEach((c, k) => pop(c, t, 49.4 + k * .55, { dx: -60, dy: 0, s0: .95 }));
+
+  // CTA
+  scene($('sCta'), t, T.cta[0], T.cta[1]);
+  pop($('cbox'), t, 52.6, { dy: 40, s0: .9 });
+  $('cTyped').textContent = typeText('ক্লড', seg(t, 53.55, 54.2));
+  $('caret2').style.opacity = t < 54.6 && Math.floor(t * 3) % 2 ? 1 : 0;
+  const sendP = seg(t, 54.45, 54.7);
+  $('send').style.transform = `scale(${1 - .18 * Math.sin(sendP * Math.PI)})`;
+  hearts.forEach(h => { const p = seg(t, 54.6 + h.d, 56.6 + h.d); h.e.style.opacity = p > 0 && p < 1 ? Math.sin(p * Math.PI) : 0; h.e.style.transform = `translate(${h.x + Math.sin(p * 6) * h.w * .3}px, ${430 - p * 400}px) scale(${h.s})`; });
+  pop($('follow'), t, 55.0, { dy: 60, s0: .9 });
+  const tap = seg(t, 56.9, 57.5);
+  const fb = $('followBtn');
+  if (t > 56.95) { fb.textContent = '✓ ফলোয়িং'; fb.style.background = 'linear-gradient(90deg,#ffb36b,#ff5fa2)'; } else { fb.textContent = 'ফলো করুন'; fb.style.background = '#fff'; }
+  fb.style.transform = `scale(${1 - .1 * Math.sin(tap * Math.PI)})`;
+  const rip = $('ripple'); rip.style.left = '700px'; rip.style.top = '780px';
+  rip.style.opacity = tap > 0 && tap < 1 ? 1 - tap : 0; rip.style.transform = `translate(-50%,-50%) scale(${1 + tap * 6})`;
+
+  // captions (karaoke)
+  let ci = CHUNKS.findIndex(c => t >= c.a - .05 && t < c.hold);
+  const cap = $('cap');
+  if (ci !== curChunk) {
+    curChunk = ci; cap.innerHTML = '';
+    const line = el('div', '', null, cap);
+    wordEls = ci < 0 ? [] : CHUNKS[ci].words.map((w, k) => { const s = el('span', '', w, line); s.className = 'w'; if (k < CHUNKS[ci].words.length - 1) line.appendChild(document.createTextNode(' ')); return s; });
+  }
+  if (ci >= 0) {
+    const c = CHUNKS[ci];
+    wordEls.forEach((w, k) => { const [wa, wb] = c.wt[k]; w.className = 'w' + (t >= wa && t < wb ? ' on' : t >= wb ? ' done' : ''); });
+    const pp = seg(t, c.a - .05, c.a + .2);
+    cap.style.opacity = 1; cap.style.transform = `translateY(${(1 - eOut(pp)) * 16}px)`;
+  } else cap.style.opacity = 0;
+
+  // scene-change flash (subtle)
+  const cuts = [2.85, 5.8, ...T.p.map(p => p.a), T.remind[0], T.cta[0]];
+  $('flash').style.opacity = Math.max(0, ...cuts.map(c => .07 * (1 - Math.abs(t - c - .05) / .18)));
+  // global fade out
+  $('stage').style.filter = t > DURATION - .6 ? `brightness(${1 - seg(t, DURATION - .6, DURATION)})` : 'none';
+}
+window.render = render; window.DURATION = DURATION;
+
+// ---------------- fit + playback ----------------
+function fit() { const k = Math.min(innerWidth / 1080, innerHeight / 1920); $('stage').style.transform = `scale(${k}) translate(-50%,-50%)`; }
+addEventListener('resize', fit); fit();
+window.ready = Promise.all([document.fonts.load('800 80px "Anek Bangla"', 'আমাকে'), document.fonts.load('600 40px "Hind Siliguri"', 'আমাকে'), document.fonts.load('800 40px Inter', 'A')]).then(() => document.fonts.ready);
+if (Q.has('record')) { document.body.classList.add('record'); window.ready.then(() => render(0)); }
+else {
+  const audio = new Audio('reel-audio.m4a');
+  let start;
+  const loop = now => { if (start === undefined) start = now; const t = (now - start) / 1000; render(Math.min(t, DURATION)); requestAnimationFrame(loop); };
+  window.ready.then(() => requestAnimationFrame(loop));
+  $('replay').onclick = () => { start = undefined; audio.currentTime = 0; audio.play().catch(() => {}); };
+}
+</script>
+</body>
+</html>
