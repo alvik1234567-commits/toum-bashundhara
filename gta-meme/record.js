@@ -1,8 +1,23 @@
 // Renders index.html frame-by-frame to an MP4.
-// Usage: node record.js [out.mp4] [--brand "Name"] [--site "site.com"] [--tag "Tagline"] [--fps 30] [--stills]
+// Usage: node record.js [out.mp4] [--brand "Name"] [--site "site.com"] [--tag "Tagline"] [--style 3d|photo|illustrated] [--fps 30] [--stills --at 2,7,12]
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const path = require('path');
+const http = require('http');
+const fs = require('fs');
+
+// tiny static server (ES modules don't load from file://)
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.png': 'image/png' };
+function serve() {
+  return new Promise(res => {
+    const srv = http.createServer((req, rsp) => {
+      const f = path.join(__dirname, decodeURIComponent(req.url.split('?')[0]));
+      if (!f.startsWith(__dirname) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { rsp.writeHead(404); return rsp.end(); }
+      rsp.writeHead(200, { 'Content-Type': TYPES[path.extname(f)] || 'application/octet-stream' });
+      fs.createReadStream(f).pipe(rsp);
+    }).listen(0, '127.0.0.1', () => res(srv));
+  });
+}
 
 const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf('--' + k); return i >= 0 ? args[i + 1] : d; };
@@ -12,11 +27,15 @@ const stills = args.includes('--stills');
 
 (async () => {
   const q = new URLSearchParams({ record: '1' });
-  for (const k of ['brand', 'site', 'tag']) if (opt(k)) q.set(k, opt(k));
-  const browser = await chromium.launch();
+  for (const k of ['brand', 'site', 'tag', 'style']) if (opt(k)) q.set(k, opt(k));
+  const srv = await serve();
+  const browser = await chromium.launch({ args: ['--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
-  await page.goto('file://' + path.join(__dirname, 'index.html') + '?' + q);
+  page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') console.error('[page]', m.text()); });
+  page.on('pageerror', e => console.error('[page]', e.message));
+  await page.goto(`http://127.0.0.1:${srv.address().port}/index.html?${q}`);
   await page.evaluate(() => window.ready);
+  console.error('mode:', await page.evaluate(() => MODE));
   const dur = await page.evaluate(() => window.DURATION);
 
   if (stills) {
@@ -24,7 +43,7 @@ const stills = args.includes('--stills');
       await page.evaluate(t => render(t), t);
       await page.screenshot({ path: path.join(__dirname, `still-${t}.png`) });
     }
-    await browser.close();
+    await browser.close(); srv.close();
     return;
   }
 
@@ -40,6 +59,6 @@ const stills = args.includes('--stills');
   }
   ff.stdin.end();
   await new Promise(r => ff.on('close', r));
-  await browser.close();
+  await browser.close(); srv.close();
   console.log('wrote', out);
 })();

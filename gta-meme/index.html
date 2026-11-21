@@ -225,6 +225,8 @@
             <image id="pgBase" href="game.jpg" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>
             <image id="pgJet" href="game-jet.jpg" width="1600" height="900" preserveAspectRatio="xMidYMid slice" opacity="0"/>
           </g>
+          <!-- 3D mode: real-time rendered game (game3d.js) -->
+          <foreignObject id="fo3dGame" width="1600" height="900" display="none"><canvas id="gameCanvas" width="1600" height="900" style="display:block;width:1600px;height:900px"></canvas></foreignObject>
           <!-- jet -->
           <ellipse id="jetShadow" cx="800" cy="800" rx="320" ry="26" fill="#000" opacity="0"/>
           <circle id="spawnRing" cx="800" cy="600" r="10" fill="none" stroke="#bff3ff" stroke-width="16" opacity="0"/>
@@ -356,6 +358,7 @@
         <use id="heroCar" href="#car" x="1000" y="720" width="760" height="282" color="#ffc23a"/>
         </g>
         <image id="introImg" href="intro.jpg" width="1920" height="1080" preserveAspectRatio="xMidYMid slice" display="none"/>
+        <foreignObject id="fo3dIntro" width="1920" height="1080" display="none"><canvas id="introCanvas" width="1920" height="1080" style="display:block;width:1920px;height:1080px"></canvas></foreignObject>
         <rect width="1920" height="1080" fill="url(#vignette)"/>
       </g>
       <rect width="1920" height="560" fill="url(#topShade)"/>
@@ -384,6 +387,12 @@
 </svg>
 </div>
 <div id="ui"><button id="replay">Replay</button></div>
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js", "three/addons/": "./vendor/addons/" } }</script>
+<script type="module">
+  import { createGame3D } from './game3d.js';
+  try { window.G3D = createGame3D(); } catch (e) { console.warn('3D unavailable', e); }
+  window.dispatchEvent(new Event('g3d'));
+</script>
 
 <script>
 // ---------- config (override with ?brand=..&site=..&tag=..) ----------
@@ -394,18 +403,22 @@ const CFG = {
   tag:   Q.get('tag')   || 'Real skills. Real progress. No shortcuts.',
 };
 const DURATION = 19;
-// Realistic mode: used automatically when game.jpg, game-jet.jpg and intro.jpg sit next to this file.
-let PHOTO = false;
+// Visual modes (?style=photo|illustrated|3d). Default: photo if the jpgs (game.jpg,
+// game-jet.jpg, intro.jpg) are present, else illustrated. 3d is experimental and opt-in.
+let MODE = 'illustrated';
 const loadImg = src => new Promise(r => { const i = new Image(); i.onload = () => r(true); i.onerror = () => r(false); i.src = src; });
-window.ready = Promise.all(['game.jpg', 'game-jet.jpg', 'intro.jpg'].map(loadImg)).then(ok => {
-  PHOTO = Q.get('style') !== 'illustrated' && ok.every(Boolean);
-  if (PHOTO) {
-    document.getElementById('illoGame').setAttribute('display', 'none');
-    document.getElementById('photoGame').removeAttribute('display');
-    document.getElementById('illoArt').setAttribute('display', 'none');
-    document.getElementById('introImg').removeAttribute('display');
-    ['jetWrap', 'jetShadow'].forEach(id => document.getElementById(id).setAttribute('display', 'none'));
+const g3dReady = Q.get('style') !== '3d' ? Promise.resolve() : new Promise(r => { if (window.G3D) r(); addEventListener('g3d', r); setTimeout(r, 6000); });
+const hide = (...ids) => ids.forEach(id => document.getElementById(id).setAttribute('display', 'none'));
+const show = (...ids) => ids.forEach(id => document.getElementById(id).removeAttribute('display'));
+window.ready = Promise.all([g3dReady, Promise.all(['game.jpg', 'game-jet.jpg', 'intro.jpg'].map(loadImg))]).then(([, ok]) => {
+  const want = Q.get('style');
+  if (window.G3D && want === '3d') MODE = '3d';  // experimental, opt-in only
+  else if (ok.every(Boolean) && (!want || want === 'photo')) MODE = 'photo';
+  if (MODE !== 'illustrated') {
+    hide('illoGame', 'illoArt', 'jetWrap', 'jetShadow');
+    show(MODE === '3d' ? 'fo3dGame' : 'photoGame', MODE === '3d' ? 'fo3dIntro' : 'introImg');
   }
+  if (MODE === '3d') hide('spawnRing', 'spawnRing2', 'sparks');
   return document.fonts.ready;
 });
 const NS = 'http://www.w3.org/2000/svg';
@@ -571,7 +584,11 @@ function render(t) {
     c.setAttribute('r', r * (1 - p)); c.setAttribute('opacity', p > 0 && p < 1 ? 1 : 0);
   });
 
-  if (PHOTO) {
+  if (MODE === '3d') {
+    if (t < 10.15) G3D.renderGame(t, $('gameCanvas'));
+    if (t >= 10.3) G3D.renderIntro(t, $('introCanvas'));
+  }
+  if (MODE === 'photo') {
     set('pgJet', 'opacity', t >= 4.95 ? 1 : 0);
     const push = 1 + .06 * seg(t, 0, 9.5);
     set('photoGame', 'transform', `translate(800 500) scale(${push}) translate(-800 -500)`);
@@ -602,7 +619,7 @@ function render(t) {
     set('outroWhite', 'opacity', (1 - seg(t, 10.5, 10.95)) * .9);
     const kb = seg(t, 10.3, DURATION);
     set('art', 'transform', `translate(960 540) scale(${1.04 + .08 * kb}) translate(${-960 - 30 * kb} -540)`);
-    if (!PHOTO) set('heroCar', 'x', 1000 - 60 * eout(seg(t, 10.3, 14.5)));
+    if (MODE === 'illustrated') set('heroCar', 'x', 1000 - 60 * eout(seg(t, 10.3, 14.5)));
     const fadeTxt = 1 - seg(t, 14.6, 14.9);
     [['t1', 11.0, 1.35], ['t2', 12.55, 1.35], ['t3', 13.4, 1.6]].forEach(([id, st, from]) => {
       const p = seg(t, st, st + .3);
