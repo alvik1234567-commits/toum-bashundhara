@@ -357,6 +357,9 @@
     <!-- 3D police scene -->
     <foreignObject id="fo3dBust" width="1920" height="1080" display="none"><canvas id="bustCanvas" width="1920" height="1080" style="display:block;width:1920px;height:1080px"></canvas></foreignObject>
     <rect id="bustTint" width="1920" height="1080" fill="#000" opacity="0"/>
+    <!-- police lights flashing around the edges -->
+    <rect id="copRed" x="-60" y="-60" width="2040" height="1200" fill="none" stroke="#ff2340" stroke-width="170" opacity="0" filter="url(#soft)"/>
+    <rect id="copBlue" x="-60" y="-60" width="2040" height="1200" fill="none" stroke="#2f6bff" stroke-width="170" opacity="0" filter="url(#soft)"/>
     <!-- the band + title -->
     <rect id="bustBand" x="0" y="395" width="1920" height="290" fill="#000" opacity="0"/>
     <g id="bustTxt" opacity="0"><!-- "busted" set in Pricedown (Typodermic), converted to outlines: fixed artwork, no font file shipped -->
@@ -750,6 +753,7 @@ function render(t) {
   set('busted', 'opacity', on ? 1 - seg(bt, bd - .25, bd) : 0);
   if (!on) return;
   const siren = Math.floor(bt * 6) % 2;
+  set('copRed', 'opacity', siren ? .9 : .12); set('copBlue', 'opacity', siren ? .12 : .9);
   set('lbRed', 'opacity', siren ? 1 : .25); set('lbBlue', 'opacity', siren ? .25 : 1);
   set('glowRed', 'opacity', siren ? .55 : 0); set('glowBlue', 'opacity', siren ? 0 : .55);
   const band = eout(seg(bt, .35, .6)), tz = seg(bt, .45, .8);
