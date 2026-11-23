@@ -429,6 +429,21 @@ export function createGame3D() {
     const k = makeCar(c); k.position.set(3.7, 0, zz); k.rotation.y = Math.PI / 2; scene.add(k);
   });
 
+  // ================= POLICE CAR (busted scene only) =================
+  const police = makeCar(0xeef0f4);
+  const doorBand = new THREE.Mesh(new THREE.BoxGeometry(2.3, .34, 2.0), new THREE.MeshStandardMaterial({ color: 0x101218, roughness: .4, metalness: .3 }));
+  doorBand.position.set(0, .62, 0); police.add(doorBand);
+  const barBase = new THREE.Mesh(new THREE.BoxGeometry(.45, .1, 1.35), new THREE.MeshStandardMaterial({ color: 0x15161c, roughness: .5 }));
+  barBase.position.set(-.2, 1.5, 0); police.add(barBase);
+  const redMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0xff2340) });
+  const blueMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0x2f6bff) });
+  const redLamp = new THREE.Mesh(new THREE.BoxGeometry(.38, .14, .6), redMat); redLamp.position.set(-.2, 1.6, .33); police.add(redLamp);
+  const blueLamp = new THREE.Mesh(new THREE.BoxGeometry(.38, .14, .6), blueMat); blueLamp.position.set(-.2, 1.6, -.33); police.add(blueLamp);
+  const redLight = new THREE.PointLight(0xff2340, 0, 30, 1.6); redLight.position.set(-.2, 2.0, .6); police.add(redLight);
+  const blueLight = new THREE.PointLight(0x2f6bff, 0, 30, 1.6); blueLight.position.set(-.2, 2.0, -.6); police.add(blueLight);
+  police.position.set(-1.2, 0, 20); police.rotation.y = Math.PI / 2 + .25; police.visible = false;
+  scene.add(police);
+
   // ================= JET =================
   function makeJet() {
     const g = new THREE.Group();
@@ -537,6 +552,20 @@ export function createGame3D() {
     target.getContext('2d').drawImage(renderer.domElement, 0, 0, target.width, target.height);
   }
   return {
+    renderBusted(bt, target) {
+      size(target.width, target.height);
+      camera.fov = 40;
+      const p = eio(clamp(bt / 2.6));
+      camera.position.set(-4.4 + p * .5, 1.25 + p * .15, 25.6 - p * .7);
+      camera.lookAt(-.9, 2.35, 19.4);
+      const on = Math.floor(bt * 6) % 2;
+      redMat.color.setScalar(0).setRGB(on ? 5 : .4, on ? .2 : 0, on ? .4 : 0);
+      blueMat.color.setRGB(on ? 0 : .05, on ? .05 : .4, on ? .4 : 5);
+      redLight.intensity = on ? 60 : 4; blueLight.intensity = on ? 4 : 60;
+      police.visible = true; jetHidden = true;
+      frame(10.5 + bt, target);
+      police.visible = false; jetHidden = false;
+    },
     renderGame(t, target) {
       size(target.width, target.height);
       camera.fov = 48;

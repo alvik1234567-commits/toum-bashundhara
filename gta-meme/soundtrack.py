@@ -9,8 +9,20 @@ from scipy.io import wavfile
 import os
 
 SR = 48000
-GAP = 1.6     # black screen held after the TV switches off (BUSTED); later events shift by GAP
-DUR = 19.04 + GAP
+# Real-time map of the animation (must match TMAP in index.html): [coreStart, coreEnd, realDuration]
+TMAP = [(0, 8.5, 8.5), (8.5, 9.4, 1.6), (9.4, 10.1, .7), (10.1, 10.1, 2.6), (10.1, 13.7, 3.6), (13.7, 14.6, 2.9), (14.6, 17.2, 2.6), (17.2, 19, 3.8)]
+DUR = sum(r[2] for r in TMAP) + .04
+BUST = (8.5 + 1.6 + .7, 8.5 + 1.6 + .7 + 2.6)
+
+
+def R(core):
+    """animation time -> real (video) time; a hold row maps to its end"""
+    acc = 0
+    for a, b, d in TMAP:
+        if b > a and a <= core <= b:
+            return acc + (core - a) / (b - a) * d
+        acc += d
+    return acc
 N = int(SR * DUR)
 rng = np.random.default_rng(7)
 
@@ -202,47 +214,53 @@ def tv_on():
 
 # ---------------------------------------------------------------- mix
 mix = np.zeros((N, 2))
+OFF = R(9.45)                      # TV switches off
 
-# scene 1-2: the game's music, muffled as if coming from the TV across the room
-tvmus = music(9.45, drums_from=0, arp_from=0)
+# scenes 1-2: the game's music, muffled as if coming from the TV across the room
+tvmus = music(OFF, drums_from=0, arp_from=0)
 tvmus = np.stack([lp(tvmus[:, 0], 900, 4), lp(tvmus[:, 1], 900, 4)], 1).mean(1)
-tvmus = tvmus + np.concatenate([np.zeros(int(.023 * SR)), tvmus[:-int(.023 * SR)]]) * .4  # small-room slap
-fade_in = np.minimum(1, t_axis(9.45) / .4)
-place(mix, tvmus * fade_in * .55, 0)
+tvmus = tvmus + np.concatenate([np.zeros(int(.023 * SR)), tvmus[:-int(.023 * SR)]]) * .4
+place(mix, tvmus * np.minimum(1, t_axis(OFF) / .4) * .55, 0)
 
-# controller inputs
-for i in range(8):
+for i in range(8):                 # controller inputs
     place(mix, click(1 + i * .04), 1.0 + i * .42, .55)
 place(mix, cheat_chime(), 4.35, .9)
-
-# jet spawn
-place(mix, whoosh(.4), 4.55, .8)
+place(mix, whoosh(.4), 4.55, .8)   # jet spawn
 place(mix, boom(), 4.95, .9)
-eng = jet_engine(9.45 - 5.0)
-te = t_axis(9.45 - 5.0)
-ramp = (.25 + .75 * np.clip((te + 5.0 - 5.6) / (9.3 - 5.6), 0, 1)) * np.minimum(1, te / .3)
+eng = jet_engine(OFF - 5.0)
+te = t_axis(OFF - 5.0)
+ramp = (.25 + .75 * np.clip((te + 5.0 - 5.6) / (R(9.3) - 5.6), 0, 1)) * np.minimum(1, te / .3)
 place(mix, eng * ramp * .55, 5.0)
 
-# TV off (everything cuts) / on
-mix[int(9.45 * SR):int((10.3 + GAP) * SR)] *= 0
-place(mix, crt_off(), 9.45, .9)
-# BUSTED on the black screen: heavy hit + police siren whoop
-place(mix, boom() * .9, 10.15, 1)
-ts = t_axis(1.3)
-whoop = np.sin(2 * np.pi * np.cumsum(np.where((ts * 2.5) % 1 < .5, 700 + 500 * ((ts * 5) % 1), 1200 - 500 * ((ts * 5) % 1))) / SR)
-whoop = lp(whoop, 3000) * np.minimum(1, ts / .03) * np.clip((1.3 - ts) / .3, 0, 1) * .25
-place(mix, whoop, 10.25, 1)
-place(mix, tv_on(), 10.3 + GAP, .8)
+# "BUT... IN REAL LIFE": error buzz
+tb = t_axis(.35)
+buzz = lp(np.sign(np.sin(2 * np.pi * 110 * tb)), 2500) * np.exp(-tb * 6) * .25
+place(mix, buzz, R(8.52), 1)
+place(mix, buzz, R(8.52) + .16, .8)
 
-# scene 3: full music; pads + bass first, drums and arp drop with the end card
-T3 = 10.62 + GAP
-full = music(DUR - T3, drums_from=8 * BEAT, arp_from=4 * BEAT)
+# TV off: everything cuts
+mix[int(OFF * SR):] *= 0
+place(mix, crt_off(), OFF, .9)
+
+# BUSTED scene: police siren wail + hit when the title lands
+ts = t_axis(BUST[1] - BUST[0])
+wail = np.sin(2 * np.pi * np.cumsum(850 + 350 * np.sin(2 * np.pi * 1.6 * ts)) / SR)
+wail = lp(wail + .3 * np.sign(wail), 3500) * np.minimum(1, ts / .1) * np.clip((ts[-1] - ts) / .25, 0, 1) * .16
+place(mix, wail, BUST[0], 1)
+place(mix, boom() * .9, BUST[0] + .45, 1)
+
+place(mix, tv_on(), R(10.3), .8)
+
+# scene 3: full music; pads + bass first, drums + arp drop with the end card
+T3, DROP = R(10.62), R(15.05)
+nb = max(4, round((DROP - T3) / .55))
+BEAT = (DROP - T3) / nb
+full = music(DUR - T3, drums_from=nb * BEAT, arp_from=(nb // 2) * BEAT)
 tf = t_axis(DUR - T3)
-full *= np.minimum(1, tf / .15)[:, None] * np.clip((DUR - T3 - tf) / 1.0, 0, 1)[:, None]
+full *= np.minimum(1, tf / .15)[:, None] * np.clip((DUR - T3 - tf) / 1.2, 0, 1)[:, None]
 place(mix, full * 1.0, T3)
-# riser into the drop
-place(mix, whoosh(BEAT * 2) * .5, 15.05 + GAP - BEAT * 2, 1)
-place(mix, kick() * 1.2, 15.05 + GAP, 1)
+place(mix, whoosh(BEAT * 2) * .5, DROP - BEAT * 2, 1)
+place(mix, kick() * 1.2, DROP, 1)
 
 # master: gentle glue + limiter
 mix = np.tanh(mix * 1.6) / np.tanh(1.6)
