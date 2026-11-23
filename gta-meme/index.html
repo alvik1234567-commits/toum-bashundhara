@@ -435,7 +435,7 @@
         <text id="enroll" x="960" y="560" text-anchor="middle" font-size="92" font-weight="800" letter-spacing="8" fill="#ffffff" opacity="0"></text>
         <rect id="hudLine" x="760" y="605" width="400" height="2" fill="#4fd1ff" opacity="0"/>
         <text id="tag" x="960" y="665" text-anchor="middle" font-size="30" font-weight="400" letter-spacing="2" fill="#9fb7d9" opacity="0">Professional Courses of Training Division</text>
-        <g id="cta" opacity="0" transform="translate(960 835)">
+        <g id="cta" opacity="0" transform="translate(960 795)">
           <rect x="-430" y="-48" width="860" height="96" fill="#25D366" fill-opacity=".12" stroke="#25D366" stroke-width="2"/>
           <path d="M-430 -28V-48H-410M410 -48H430V-28M430 28V48H410M-410 48H-430V28" stroke="#ffffff" stroke-width="3" fill="none"/>
           <rect id="ctaScan" x="-430" y="-48" width="70" height="96" fill="#ffffff" opacity="0"/>
@@ -445,12 +445,7 @@
           </g>
           <text id="site" x="30" y="12" text-anchor="middle" font-size="34" font-weight="700" letter-spacing="1" fill="#ffffff">WhatsApp CERT for Registration</text>
         </g>
-        <g id="siteBox" opacity="0" transform="translate(960 945)">
-          <rect x="-230" y="-34" width="460" height="68" fill="#4fd1ff" fill-opacity=".08" stroke="#4fd1ff" stroke-width="2"/>
-          <path d="M-230 -18V-34H-214M214 -34H230V-18M230 18V34H214M-214 34H-230V18" stroke="#ffffff" stroke-width="2.5" fill="none"/>
-          <g transform="translate(-170 0)" fill="none" stroke="#4fd1ff" stroke-width="2.4"><circle r="15"/><ellipse rx="6.5" ry="15"/><path d="M-15 0H15M-12 -8H12M-12 8H12"/></g>
-          <text x="20" y="10" text-anchor="middle" font-size="30" font-weight="500" letter-spacing="3" fill="#cfefff">cert-earth.com</text>
-        </g>
+        <text id="siteBox" x="960" y="905" text-anchor="middle" font-size="30" font-weight="500" letter-spacing="4" fill="#cfefff" opacity="0">cert-earth.com</text>
       </g>
     </g>
     <rect id="outroWhite" width="1920" height="1080" fill="#e9f4ff" opacity="0"/>
@@ -739,9 +734,9 @@ function renderCore(t) {
     set('tag', 'opacity', seg(t, 16.35, 16.75));
     const c = eout(seg(t, 16.6, 17.0));
     set('cta', 'opacity', c);
-    set('cta', 'transform', `translate(960 ${835 + (1 - c) * 20})`);
+    set('cta', 'transform', `translate(960 ${795 + (1 - c) * 20})`);
     const sb = eout(seg(t, 16.9, 17.25));
-    set('siteBox', 'opacity', sb); set('siteBox', 'transform', `translate(960 ${945 + (1 - sb) * 16})`);
+    set('siteBox', 'opacity', sb); set('siteBox', 'transform', `translate(0 ${(1 - sb) * 16})`);
     const sc = seg(t, 17.1, 17.7);
     set('ctaScan', 'opacity', sc > 0 && sc < 1 ? .22 : 0); set('ctaScan', 'x', -430 + sc * 790);
   }
