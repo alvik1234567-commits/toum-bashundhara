@@ -9,7 +9,8 @@ from scipy.io import wavfile
 import os
 
 SR = 48000
-DUR = 19.04
+GAP = 1.6     # black screen held after the TV switches off (BUSTED); later events shift by GAP
+DUR = 19.04 + GAP
 N = int(SR * DUR)
 rng = np.random.default_rng(7)
 
@@ -222,27 +223,26 @@ te = t_axis(9.45 - 5.0)
 ramp = (.25 + .75 * np.clip((te + 5.0 - 5.6) / (9.3 - 5.6), 0, 1)) * np.minimum(1, te / .3)
 place(mix, eng * ramp * .55, 5.0)
 
-# BUSTED: game sound drops away, hit + quick police siren whoop
-mix[int(8.35 * SR):int(9.45 * SR)] *= .35
-place(mix, boom() * .8, 8.35, 1)
-ts = t_axis(.9)
-whoop = np.sin(2 * np.pi * np.cumsum(np.where((ts * 2.5) % 1 < .5, 700 + 500 * ((ts * 5) % 1), 1200 - 500 * ((ts * 5) % 1))) / SR)
-whoop = lp(whoop, 3000) * np.minimum(1, ts / .03) * np.clip((.9 - ts) / .2, 0, 1) * .22
-place(mix, whoop, 8.45, 1)
-
 # TV off (everything cuts) / on
-mix[int(9.45 * SR):int(10.3 * SR)] *= 0
+mix[int(9.45 * SR):int((10.3 + GAP) * SR)] *= 0
 place(mix, crt_off(), 9.45, .9)
-place(mix, tv_on(), 10.3, .8)
+# BUSTED on the black screen: heavy hit + police siren whoop
+place(mix, boom() * .9, 10.15, 1)
+ts = t_axis(1.3)
+whoop = np.sin(2 * np.pi * np.cumsum(np.where((ts * 2.5) % 1 < .5, 700 + 500 * ((ts * 5) % 1), 1200 - 500 * ((ts * 5) % 1))) / SR)
+whoop = lp(whoop, 3000) * np.minimum(1, ts / .03) * np.clip((1.3 - ts) / .3, 0, 1) * .25
+place(mix, whoop, 10.25, 1)
+place(mix, tv_on(), 10.3 + GAP, .8)
 
 # scene 3: full music; pads + bass first, drums and arp drop with the end card
-full = music(DUR - 10.62, drums_from=8 * BEAT, arp_from=4 * BEAT)
-tf = t_axis(DUR - 10.62)
-full *= np.minimum(1, tf / .15)[:, None] * np.clip((DUR - 10.62 - tf) / 1.0, 0, 1)[:, None]
-place(mix, full * 1.0, 10.62)
+T3 = 10.62 + GAP
+full = music(DUR - T3, drums_from=8 * BEAT, arp_from=4 * BEAT)
+tf = t_axis(DUR - T3)
+full *= np.minimum(1, tf / .15)[:, None] * np.clip((DUR - T3 - tf) / 1.0, 0, 1)[:, None]
+place(mix, full * 1.0, T3)
 # riser into the drop
-place(mix, whoosh(BEAT * 2) * .5, 15.05 - BEAT * 2, 1)
-place(mix, kick() * 1.2, 15.05, 1)
+place(mix, whoosh(BEAT * 2) * .5, 15.05 + GAP - BEAT * 2, 1)
+place(mix, kick() * 1.2, 15.05 + GAP, 1)
 
 # master: gentle glue + limiter
 mix = np.tanh(mix * 1.6) / np.tanh(1.6)

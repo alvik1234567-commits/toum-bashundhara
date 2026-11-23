@@ -549,12 +549,12 @@ export function createGame3D() {
       size(target.width, target.height);
       camera.fov = 38;
       const p = eio(seg(t, 10.3, 19));
-      const cx = car.position.x, cz = car.position.z;
-      camera.position.set(cx - 6.2 + p * .5, .75 + p * .25, cz - 7.5 + p * 2.4);
-      camera.lookAt(cx + 1.2, 2.2, cz - .6);
-      jetHidden = true; fill.visible = false;
+      // hero shot of the spawned jet, low and in front of its nose
+      const jx = JET_POS.x, jz = JET_POS.z;
+      camera.position.set(jx - 9.5 + p * 1.2, 1.1 + p * .3, jz + 7.5 - p * 1.5);
+      camera.lookAt(jx + .5, 2.6, jz - 1);
+      ring.visible = false;
       frame(t, target);
-      jetHidden = false; fill.visible = true;
     },
   };
 }
