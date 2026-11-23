@@ -6,7 +6,7 @@
 <title>Cheat Code Ad</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Lilita+One&family=Inter:wght@500;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=block" rel="stylesheet">
 <style>
   :root { --bg: #07050d; --ui: #ffffff; }
   html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; }
@@ -359,7 +359,9 @@
     <rect id="bustTint" width="1920" height="1080" fill="#000" opacity=".18"/>
     <!-- the band + title -->
     <rect id="bustBand" x="0" y="395" width="1920" height="290" fill="#000" opacity="0"/>
-    <text id="bustTxt" x="960" y="610" text-anchor="middle" font-family="'Lilita One', 'Anton', sans-serif" font-size="230" letter-spacing="6" fill="#62c6ff" stroke="#0a1a2b" stroke-width="10" paint-order="stroke" stroke-linejoin="round" opacity="0">busted</text>
+    <g id="bustTxt" opacity="0"><!-- "busted" set in Pricedown (Typodermic), converted to outlines: fixed artwork, no font file shipped -->
+      <path transform="translate(506.0 655.9) scale(0.29)" d="M389 0C458 0 493 -26 493 -79V-558C493 -612 458 -639 389 -639H234V-799H26V0ZM285 -161C285 -160 284 -159 283 -159H234V-479H283C284 -479 285 -478 285 -477ZM906 0C975 0 1010 -26 1010 -79V-639H802V-161C802 -160 801 -159 800 -159H753C752 -159 751 -160 751 -161V-639H543V-79C543 -26 578 0 647 0ZM1422 0C1491 0 1526 -26 1526 -79V-320C1526 -373 1491 -399 1422 -399H1269C1268 -399 1267 -400 1267 -401V-477C1267 -478 1268 -479 1269 -479H1316C1317 -479 1318 -478 1318 -477V-440H1526V-558C1526 -612 1491 -639 1422 -639H1163C1094 -639 1059 -612 1059 -558V-320C1059 -266 1094 -239 1163 -239H1316C1317 -239 1318 -238 1318 -237V-161C1318 -160 1317 -159 1316 -159H1269C1268 -159 1267 -160 1267 -161V-199H1059V-79C1059 -26 1094 0 1163 0ZM1970 0C2039 0 2074 -26 2074 -79V-399H1867V-161C1867 -160 1866 -159 1865 -159H1817C1816 -159 1815 -160 1815 -161V-440H2074V-598H1815V-639H1607V-598H1556V-440H1607V-79C1607 -26 1642 0 1711 0ZM2382 -388H2331V-477C2331 -478 2332 -479 2333 -479H2380C2381 -479 2382 -478 2382 -477ZM2486 0C2555 0 2590 -26 2590 -79V-199H2382V-161C2382 -160 2381 -159 2380 -159H2333C2332 -159 2331 -160 2331 -161V-239H2590V-558C2590 -612 2555 -639 2486 -639H2227C2158 -639 2123 -612 2123 -558V-79C2123 -26 2158 0 2227 0ZM3105 0V-799H2897V-639H2742C2673 -639 2638 -612 2638 -558V-79C2638 -26 2670 0 2742 0ZM2897 -159H2848C2847 -159 2846 -160 2846 -161V-477C2846 -478 2847 -479 2848 -479H2897Z" fill="#5cc3f7" stroke="#0b1622" stroke-width="22" paint-order="stroke" stroke-linejoin="round"/>
+    </g>
   </g>
 
   <!-- ================= OUTRO ================= -->
