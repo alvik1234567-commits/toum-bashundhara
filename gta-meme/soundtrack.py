@@ -251,7 +251,16 @@ def siren(t, detune=1.0):
     ph = 2 * np.pi * np.cumsum(f) / SR
     x = np.sin(ph) + .45 * np.sin(2 * ph) + .25 * np.sin(3 * ph)          # horn-speaker harmonics
     return bp(np.tanh(x * 1.6), 400, 4500)
-sv = siren(ts) + .6 * siren(ts, 1.035)
+SIREN_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'busted-siren.wav')
+if os.path.exists(SIREN_FILE):                     # user-supplied siren clip, trimmed to the BUSTED screen
+    _sr, clip = wavfile.read(SIREN_FILE)
+    clip = clip.astype(float) / 32768
+    clip = clip.mean(1) if clip.ndim == 2 else clip
+    clip = clip[int(.2 * SR):int(.2 * SR) + len(ts)]
+    clip = np.pad(clip, (0, len(ts) - len(clip)))
+    sv = clip / (np.abs(clip).max() + 1e-9) * 2.4
+else:
+    sv = siren(ts) + .6 * siren(ts, 1.035)
 echo = np.concatenate([np.zeros(int(.11 * SR)), sv[:-int(.11 * SR)]]) * .35
 sv = (sv + echo) * np.minimum(1, ts / .08) * np.clip((ts[-1] - ts) / .2, 0, 1) * .14
 place(mix, sv, BUST[0], 1)
